@@ -1,0 +1,631 @@
+/* Game Dashboard Styles */
+
+.game-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  color: #e0e0e0;
+}
+
+.dashboard-header {
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 2px solid #00d4ff;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #00d4ff;
+}
+
+.game-status {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.turn-indicator {
+  background: #00d4ff;
+  color: #0f0f1e;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.status-badge {
+  background: #4a9eff;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.players-info {
+  color: #a0a0a0;
+  font-size: 14px;
+}
+
+.game-state-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.state-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.state-item label {
+  font-size: 12px;
+  color: #a0a0a0;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #2a2a4e;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #00d4ff;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #4a9eff);
+  transition: width 0.3s ease;
+}
+
+.state-item > span {
+  font-size: 14px;
+  color: #00d4ff;
+  font-weight: bold;
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #2a2a4e;
+  padding: 0 20px;
+  background: #16213e;
+}
+
+.tab {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #a0a0a0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  color: #00d4ff;
+}
+
+.tab.active {
+  color: #00d4ff;
+  border-bottom-color: #00d4ff;
+}
+
+.dashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.dashboard-loading,
+.dashboard-error,
+.dashboard-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 18px;
+  color: #a0a0a0;
+}
+
+.dashboard-error {
+  color: #ff6b6b;
+}
+
+/* Overview Section */
+.overview-section {
+  width: 100%;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid #00d4ff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.1);
+}
+
+.card h2 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #00d4ff;
+  border-bottom: 1px solid #2a2a4e;
+  padding-bottom: 10px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a4e;
+}
+
+.stat-label {
+  color: #a0a0a0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  color: #00d4ff;
+  font-weight: bold;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.portfolio-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.breakdown-item span:first-child {
+  color: #a0a0a0;
+}
+
+.breakdown-item span:last-child {
+  color: #4a9eff;
+}
+
+.breakdown-item.total {
+  border-top: 1px solid #2a2a4e;
+  padding-top: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.breakdown-item.total span:last-child {
+  color: #00d4ff;
+  font-size: 16px;
+}
+
+.return-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a4e;
+}
+
+.return-item .label {
+  color: #a0a0a0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.return-item .value {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.return-item .value.positive {
+  color: #4ade80;
+}
+
+.return-item .value.negative {
+  color: #ff6b6b;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-item {
+  padding: 10px;
+  background: #2a2a4e;
+  border-left: 3px solid #4a9eff;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.event-item.approved {
+  border-left-color: #4ade80;
+}
+
+.event-item.pending {
+  border-left-color: #fbbf24;
+}
+
+.event-title {
+  font-size: 14px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+.event-severity,
+.event-badge {
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.event-badge {
+  color: #fbbf24;
+  font-weight: bold;
+}
+
+/* Markets Section */
+.markets-section {
+  width: 100%;
+}
+
+.markets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.market-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.market-item {
+  background: #2a2a4e;
+  border: 1px solid #4a9eff;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.market-name {
+  font-weight: bold;
+  color: #e0e0e0;
+}
+
+.market-price {
+  font-weight: bold;
+}
+
+.market-price.up {
+  color: #4ade80;
+}
+
+.market-price.down {
+  color: #ff6b6b;
+}
+
+.market-info {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.market-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.market-actions input {
+  flex: 1;
+  padding: 8px;
+  background: #1a1a2e;
+  border: 1px solid #4a9eff;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 12px;
+}
+
+.market-actions input::placeholder {
+  color: #6a6a8e;
+}
+
+.btn-buy,
+.btn-sell {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-buy {
+  background: #4ade80;
+  color: #0f0f1e;
+}
+
+.btn-buy:hover:not(:disabled) {
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
+
+.btn-sell {
+  background: #ff6b6b;
+  color: white;
+}
+
+.btn-sell:hover:not(:disabled) {
+  background: #ff5252;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.btn-buy:disabled,
+.btn-sell:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 20px;
+  padding: 12px;
+  background: #2a2a4e;
+  border-radius: 4px;
+  border-left: 3px solid #4a9eff;
+  align-items: center;
+}
+
+.item-name {
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+.item-category {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-left: 8px;
+}
+
+.item-price {
+  font-weight: bold;
+}
+
+.item-price.up {
+  color: #4ade80;
+}
+
+.item-price.down {
+  color: #ff6b6b;
+}
+
+.item-quantity {
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+/* Portfolio Section */
+.portfolio-section {
+  width: 100%;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+}
+
+.holdings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.holdings-table thead {
+  background: #2a2a4e;
+}
+
+.holdings-table th {
+  padding: 10px;
+  text-align: left;
+  color: #00d4ff;
+  font-weight: bold;
+  border-bottom: 1px solid #4a9eff;
+}
+
+.holdings-table td {
+  padding: 10px;
+  border-bottom: 1px solid #2a2a4e;
+  color: #e0e0e0;
+}
+
+.holdings-table tr:hover {
+  background: #2a2a4e;
+}
+
+.holdings-table td.positive {
+  color: #4ade80;
+}
+
+.holdings-table td.negative {
+  color: #ff6b6b;
+}
+
+/* Population Section */
+.population-section {
+  width: 100%;
+}
+
+.sentiment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sentiment-item {
+  background: #2a2a4e;
+  border-radius: 6px;
+  padding: 15px;
+  border-left: 3px solid #4a9eff;
+}
+
+.sentiment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.archetype-name {
+  font-weight: bold;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.population-size {
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.approval-bar {
+  height: 20px;
+  background: #1a1a2e;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid #4a9eff;
+}
+
+.approval-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.approval-fill.positive {
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+}
+
+.approval-fill.negative {
+  background: linear-gradient(90deg, #ff6b6b, #ff5252);
+}
+
+.approval-value {
+  display: block;
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-bottom: 8px;
+}
+
+.groups-breakdown {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.group-badge {
+  background: #1a1a2e;
+  border: 1px solid #4a9eff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #4a9eff;
+}
+
+/* Scrollbar styling */
+.dashboard-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+  background: #16213e;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+  background: #4a9eff;
+  border-radius: 4px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+  background: #00d4ff;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .overview-grid,
+  .markets-grid,
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-state-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .dashboard-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+
+  .item-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}

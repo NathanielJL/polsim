@@ -1,0 +1,82 @@
+.news-page {
+  min-height: 100vh;
+  background-color: #0f1419;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.news-page header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.news-page h1 {
+  font-size: 32px;
+}
+
+.article-form {
+  background-color: #1a1f27;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.article-form input,
+.article-form textarea,
+.article-form select {
+  width: 100%;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.article-card {
+  background-color: #1a1f27;
+  border-left: 4px solid #1a73e8;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.article-card:hover {
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+}
+
+.article-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.article-card .meta {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #999;
+}
+
+.article-card .outlet {
+  background-color: rgba(26, 115, 232, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #1a73e8;
+}
+
+.article-card .turn {
+  color: #666;
+}
+
+.article-card p {
+  line-height: 1.6;
+  color: #bbb;
+}

@@ -1,0 +1,81 @@
+.markets-page {
+  min-height: 100vh;
+  background-color: #0f1419;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.markets-page header {
+  margin-bottom: 40px;
+}
+
+.markets-page h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.markets-page header p {
+  color: #999;
+  font-size: 16px;
+}
+
+.markets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.market-card {
+  background-color: #1a1f27;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.market-card:hover {
+  border-color: #1a73e8;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+}
+
+.market-card h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.market-card .price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a73e8;
+  margin-bottom: 10px;
+}
+
+.market-card .trend {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.market-card .trend.rising {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.market-card .trend.falling {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.market-card .trend.stable {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.market-card button {
+  width: 100%;
+  background-color: #1a73e8;
+}

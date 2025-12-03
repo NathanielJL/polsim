@@ -1,0 +1,183 @@
+.gm-dashboard {
+  min-height: 100vh;
+  background-color: #0f1419;
+}
+
+.gm-dashboard header {
+  background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.gm-dashboard h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.gm-tabs {
+  max-width: 1400px;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.gm-tabs button {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 10px 0;
+  color: #999;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gm-tabs button:hover {
+  color: #e0e0e0;
+}
+
+.gm-tabs button.active {
+  color: #f57c00;
+  border-bottom-color: #f57c00;
+}
+
+.gm-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px 30px;
+}
+
+.events-review h2,
+.value-overrides h2,
+.ai-instructions h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-card {
+  background-color: #1a1f27;
+  border-left: 4px solid #f57c00;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.event-header h3 {
+  font-size: 20px;
+}
+
+.severity {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: rgba(245, 124, 0, 0.2);
+  color: #f57c00;
+}
+
+.event-type {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.event-description {
+  color: #bbb;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.duration-control {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.duration-control label {
+  color: #999;
+  font-size: 14px;
+}
+
+.duration-control input {
+  width: 80px;
+}
+
+.event-card .actions {
+  display: flex;
+  gap: 10px;
+}
+
+.event-card .approve {
+  flex: 1;
+  background-color: #4caf50;
+}
+
+.event-card .approve:hover {
+  background-color: #45a049;
+}
+
+.event-card .reject {
+  flex: 1;
+  background-color: #f44336;
+}
+
+.event-card .reject:hover {
+  background-color: #da190b;
+}
+
+.override-form,
+.ai-form {
+  background-color: #1a1f27;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 600px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+}
+
+.override-form button,
+.ai-form button {
+  width: 100%;
+  background-color: #f57c00;
+  margin-top: 10px;
+}
+
+.override-form button:hover,
+.ai-form button:hover {
+  background-color: #e65100;
+}

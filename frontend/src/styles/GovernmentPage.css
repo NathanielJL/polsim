@@ -1,0 +1,106 @@
+.government-page {
+  min-height: 100vh;
+  background-color: #0f1419;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.government-page header {
+  margin-bottom: 40px;
+}
+
+.government-page h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.government-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.government-stats .stat {
+  background-color: #1a1f27;
+  border-left: 4px solid #4caf50;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.government-stats label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.government-stats value {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #4caf50;
+  margin-top: 10px;
+}
+
+.laws-section,
+.debates-section {
+  margin-bottom: 40px;
+}
+
+.laws-section h2,
+.debates-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.laws-section button {
+  margin-bottom: 20px;
+}
+
+.laws-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.law-item {
+  background-color: #1a1f27;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.law-item h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.law-item p {
+  color: #999;
+  margin-bottom: 15px;
+}
+
+.law-item .status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.law-item .status.active {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.law-item .status.proposed {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.law-item .status.repealed {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
