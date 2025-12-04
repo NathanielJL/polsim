@@ -6,8 +6,10 @@
 import { Router, Request, Response } from 'express';
 import { models } from '../models/mongoose';
 import { authMiddleware } from '../middleware/auth';
+import { AIService } from '../services/AIService';
 
 const router = Router();
+const aiService = new AIService();
 
 /**
  * Middleware to check if user is GM
@@ -266,7 +268,8 @@ router.post('/province/:id/immigration', authMiddleware, gmOnly, async (req: Req
 
 /**
  * POST /api/gm/event
- * Create custom event
+ * Create custom event with AI analysis
+ * GM describes event in natural language, AI calculates effects
  */
 router.post('/event', authMiddleware, gmOnly, async (req: Request, res: Response) => {
   try {
@@ -274,6 +277,8 @@ router.post('/event', authMiddleware, gmOnly, async (req: Request, res: Response
       sessionId,
       title,
       description,
+      useAI = true, // Default to AI analysis
+      // Manual fields (if useAI = false)
       severity,
       type,
       duration,
@@ -282,33 +287,141 @@ router.post('/event', authMiddleware, gmOnly, async (req: Request, res: Response
       populationImpact
     } = req.body;
     
-    const event = await models.Event.create({
+    let eventData: any = {
       id: `event-${Date.now()}`,
       sessionId,
       title,
       description,
-      severity: severity || 5,
-      type: type || 'Custom',
-      duration: duration || 3,
-      affectedGroups: [],
-      gdpImpact,
       gmApproved: true,
       createdAt: new Date()
-    });
-    
-    // Apply immediate effects if specified
-    if (affectedProvinces && affectedProvinces.length > 0) {
-      for (const provinceId of affectedProvinces) {
-        const province = await models.Province.findById(provinceId);
-        if (province && gdpImpact) {
-          province.gdp = Math.round(province.gdp * (1 + gdpImpact / 100));
-          await province.save();
+    };
+
+    if (useAI) {
+      // AI analyzes the event description
+      console.log('🤖 AI analyzing GM event...');
+      const aiAnalysis = await aiService.analyzeGMEvent(title, description);
+
+      if (!aiAnalysis.success) {
+        return res.status(400).json({
+          error: 'Could not analyze event',
+          details: aiAnalysis.error
+        });
+      }
+
+      // Merge AI analysis with event data
+      eventData.type = aiAnalysis.eventType || 'Custom';
+      eventData.severity = aiAnalysis.severity || 5;
+      eventData.duration = aiAnalysis.duration || 3;
+      eventData.summary = aiAnalysis.summary;
+      eventData.affectedProvinces = aiAnalysis.affectedProvinces || [];
+      eventData.effects = aiAnalysis.effects || {};
+
+      // Auto-apply effects if AI is used
+      if (aiAnalysis.effects) {
+        // Apply population changes
+        if (aiAnalysis.effects.population) {
+          const provinces = aiAnalysis.effects.population.provinces;
+          const change = aiAnalysis.effects.population.change;
+
+          for (const provinceName of provinces) {
+            const province = await models.Province.findOne({ 
+              sessionId, 
+              name: provinceName 
+            });
+            if (province) {
+              province.population = Math.max(0, (province.population || 0) + change);
+              await province.save();
+            }
+          }
+        }
+
+        // Apply GDP changes
+        if (aiAnalysis.effects.gdp) {
+          const changePercent = aiAnalysis.effects.gdp.changePercent;
+          const provinces = aiAnalysis.effects.gdp.provinces;
+
+          if (provinces[0] === 'all') {
+            const allProvinces = await models.Province.find({ sessionId });
+            for (const province of allProvinces) {
+              province.gdp = Math.round((province.gdp || 0) * (1 + changePercent));
+              await province.save();
+            }
+          } else {
+            for (const provinceName of provinces) {
+              const province = await models.Province.findOne({ 
+                sessionId, 
+                name: provinceName 
+              });
+              if (province) {
+                province.gdp = Math.round((province.gdp || 0) * (1 + changePercent));
+                await province.save();
+              }
+            }
+          }
+        }
+      }
+    } else {
+      // Manual mode - GM provides structured data
+      eventData.type = type || 'Custom';
+      eventData.severity = severity || 5;
+      eventData.duration = duration || 3;
+      eventData.affectedGroups = [];
+      eventData.gdpImpact = gdpImpact;
+      
+      // Apply immediate effects if specified (manual mode)
+      if (affectedProvinces && affectedProvinces.length > 0) {
+        for (const provinceId of affectedProvinces) {
+          const province = await models.Province.findById(provinceId);
+          if (province && gdpImpact) {
+            province.gdp = Math.round(province.gdp * (1 + gdpImpact / 100));
+            await province.save();
+          }
         }
       }
     }
     
-    res.json({ success: true, event });
+    const event = await models.Event.create(eventData);
+    
+    // Auto-generate AI news articles for this event
+    if (useAI) {
+      try {
+        console.log('📰 Generating AI news articles...');
+        const newsData = await aiService.generateNewsFromEvent(
+          title,
+          description,
+          eventData.type,
+          eventData.affectedProvinces || []
+        );
+
+        if (newsData.success) {
+          // Create articles for each AI newspaper
+          for (const article of newsData.articles) {
+            await models.NewsArticle.create({
+              id: `article-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+              sessionId,
+              outletId: article.outlet.toLowerCase().replace(/\s+/g, '-'),
+              title: article.headline,
+              content: article.content,
+              tone: article.tone,
+              eventId: event.id,
+              aiGenerated: true,
+              createdAt: new Date(),
+            });
+          }
+          console.log(`✅ Generated ${newsData.articles.length} AI news articles`);
+        }
+      } catch (newsError: any) {
+        console.error('News generation failed (non-critical):', newsError.message);
+      }
+    }
+    
+    res.json({ 
+      success: true, 
+      event,
+      aiAnalysis: useAI ? eventData : undefined
+    });
   } catch (error: any) {
+    console.error('Event creation error:', error);
     res.status(500).json({ error: error.message });
   }
 });

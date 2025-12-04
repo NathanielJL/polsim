@@ -1,0 +1,273 @@
+﻿Comprehensive Game Initialization Questions
+1. POLITICAL SYSTEM FOUNDATION
+Party System:
+* How many political parties exist at game start (1853)?
+* Party names, ideologies, and founding dates?
+* Which parties have seats in which provincial legislatures?
+* Are there national-level parties or only provincial parties?
+* Party membership numbers and organizational strength per province?
+* Key party platforms on major issues (land, Māori rights, immigration, tariffs)?
+There would be 3 factions at the beginning of the game. (1854) This would be the Loyalty League, the Miscegenation Block, and the Broader Reform Faction (you can name). 
+Loyalty League: Conservative/Reactionary, Strict Property Rights, Abolition of Bi-cultural rights. Issues (as per question 1.6): Non-expansionist, segregationist, tight-immigration, anti-tariff. Miscegenation Block: Progressive, Universal Male Suffrage, Reformists.!Issues (as per question 1.6): Expansionist, Maori-autonomy, free-immigration, anti-tariff Broader Reform Faction: Moderate, Reformist, Devolutionism.!Issues (as per question 1.6): Expansionist, segregationist, tight-immigration, pro-tariff. There are only provincial parties, but there can also be repeating parties or alliances if organized by players (players can do this through discord or other chats). Parties may also endorse politicians and campaign (action provided to party leader, if a group/counsel leadership for multiprovincial party, GMs can handle it) Parties will have two actions: Raise Funds and Campaign (endorsing will be a function of mentioning a player in a manner saying something like “We/I endorse @player; same for player endorsing players directly, reputation + from similar population followings). GMs will probably create/change factions every decade and parties will be able to join factions.
+Current Government:
+* Who is the Governor/Governor-General in 1853?
+* Are there Provincial Superintendents for each province? Names?
+* Is there a colonial legislature yet, or only provincial councils?
+* What is the current government's political composition?
+* Any opposition coalitions formed?
+Governor John P. Marsden. Vulteralia’s Superintendent Monsieur Armand DuBois. New Zealand’s Superintendent William S. Hamilton. Cooksland Superintendent Frederick L. Davies. New Caledonia, Orketers, Tasminata, Southland are up for election. (Players will have to create a federal or provincial bill regarding length of terms). Constitution will explain government composition. 
+Electoral System:
+* Property qualifications for voting? (£ value or acreage required)
+* Who can vote? (European men only? Māori chiefs? Property owners?)
+* Electoral districts - boundaries and representation ratios?
+* How often are elections held?
+* Secret ballot or show of hands?
+* When was the last election? Next scheduled election?
+As of now, White Male Property Owner can vote. (No value or acreage required unless policy voted in; policies and vote will be seen at end of turn, GMs will instruct AI if systems needs to be changed, when policy is approved by GM after passing, AI will then automate economy, reputation. (Do you think events should be GM made rather than AI curated?) Elections held will be decided by player set terms, GMs will instruct AI. Show of Hands as of now (counted at end of turn). No scheduled election, GMs will create narrative event until enough players join. If not, narrative event starts game off. 
+Legislature Structure:
+* Unicameral or bicameral? (Lower House + Upper House/Council?)
+* How many seats total? Seats per province?
+* Appointed vs. elected seats?
+* Term lengths?
+* Māori representation - separate seats or integrated?
+Bicameral, constitution will provide. 35 Lower House: 1 Seat per 815 people. Southland: 14; Vulteralia: 6; Cooksland: 5; Tasminata: 5; New Zealand: 4; New Caledonia: 1; Orketers: 0. Upper House: 14 (will be replaced by players, narrative event to bypass for life clause) No term lengths as of now. No Maori representation. 
+2. ECONOMIC FOUNDATIONS
+Currency & Finance:
+* What currency is used? (British pounds sterling? Colonial pounds? Mix?)
+* Exchange rates if multiple currencies exist?
+* Are there banks? Which ones, where located?
+* Interest rates for loans?
+* Government debt levels?
+* Tax rates (property tax, import duties, poll tax)?
+British Pounds Sterling. No exchange rates. No National/ Provincial Bank; local banks exist. Yes interest rate. Yes government debt levels. Tax rates reflecting Colonial/(Real-Life)New Zealand taxes in the 1850s (British ones cannot be changed through policy, Zealandia tax rates are yet to be established). Set player start fund to 10k as well. 
+Starting Resources by Province:
+* Which provinces have which of the 30 resources discovered already?
+* Resource quantities/deposits per province at game start?
+* Which resources are still undiscovered (to be found via exploration/GM events)?
+* Gold/silver deposits - discovered or hidden for future rushes?
+Decide based on era/technology. Don’t forget there will be future resources too. Yes to quantities/deposits. Oil, other modern resources present in Zealandia not yet named. Gold/Silver hidden for future events.
+Economic Activity:
+* GDP per province at game start?
+* Unemployment rates per province?
+* Wage levels (agricultural workers, skilled trades, professionals)?
+* Cost of living (food, housing, land prices)?
+* Major industries per province (pastoral, whaling, sealing, agriculture)?
+Decide based on era.
+Trade & Markets:
+* Export commodities and volumes (wool, timber, whale oil)?
+* Import dependencies (manufactured goods, tools, weapons)?
+* Trade partners (Britain, Australia, Pacific Islands)?
+* Tariff policies - free trade or protectionist?
+* Market prices for the 30 resources at game start?
+Create data dashboard on exports and imports for economy (events will drive describe countries supply/demand as event for changes, do not show where exports go to or where imports come from, GM job in events). Look to real life for exports and import dependencies. Trade Partners should reflect exports/imports of the era (look to real life sources if you need to). Tariff policies should align with British Empire (1850 or before). Yes to Market prices for the 30 resources at game start (players cannot buy directly, only ETF of sector in Stock Market). 
+Land Ownership:
+* How much European-owned land per province (acres/hectares)?
+* Crown lands available for settlement?
+* Māori-owned land percentages per province?
+* Land prices per acre by province and quality?
+* Squatting/leasehold systems in operation?
+Use culture map of cells for European and Maori/Highlander/Moriri-owned land per province. (Can AI use Json to simulate culture expansion as European expansion or will GMs need to provide new maps occasionally, or both) Crown lands -> refer to lore for answer. Land price per acre by province and quality (scale to gdp and gd as to now overprice, & reflect the era time) Squatting/leaseing as a statistic group for population demographic dashboard.
+3. DEMOGRAPHIC DETAILS
+European/Mixed Population Breakdown (30,000 total):
+* Age distribution (children, working age, elderly percentages)?
+* Gender ratios per province?
+* Occupational breakdown (farmers, laborers, merchants, professionals)?
+* Literacy rates?
+* Urban vs. rural split per province (you said 8k urban, 22k rural - which cities have which populations)?
+Age distribution, refer to the era. Gender ratios, refer to era. Occupational breakdown as group statistic for population demographic dashboard. Literacy rates, same as above, refer to era. Major cities: Auckland, Wellington, Cook’s Landing. The rest are emerging or notable towns. 
+City Populations:
+* Auckland population? Wellington? Christchurch? Dunedin? Port Nicholson? Russell?
+* Which cities are capitals of which provinces?
+* Port cities vs. inland cities?
+* City growth rates?
+Refer to constitution for city and capitals. If not said, provinces will have to choose a capital when more cities arise. Look at city map and proximation from river/coast for port cities and inland cities (remember that map is based on Continent Zealandia, use Real Life approximation + height map). City growth rates, approximation by resource (non-agricultural/farming - , manufacturing + , mining - , or agricultural processing + ). 
+Immigration:
+* Current annual immigration rate?
+* Source countries (England, Scotland, Ireland, Germany percentages)?
+* Assisted passage schemes - who qualifies, cost?
+* Immigration targets by occupation?
+Immigration rate, refer to era. Events will include immigration data as well. Source countries, refer to era. Assisted passage schemes are a no. Immigration targets by occupation, yes, include in population demographic dashboard.
+Māori Population (65,000):
+* Breakdown by iwi/tribal confederation per province?
+* Māori living in traditional villages vs. mission settlements vs. towns?
+* Māori engaged in European economy (wage labor, trade)?
+* Māori land ownership per province (acreage)?
+* Tribal warfare status - active conflicts or peace?
+Refer to lore. Guesstimate Maori living. Maori engaged in Zealandia trade. Refer to lore on land ownership and culture map. Peace and Conflict (Deterrent raids).
+Cultural Groups:
+* Exact breakdown of the 18 cultures - which cultures are in which provinces and at what population?
+* Cultural integration levels (isolated vs. mixed communities)?
+* Inter-cultural tensions or cooperation?
+Tasminata: English-Anglican, Moriri. New Caledonia: Scottish-Presbyterian, Morir. New Zealand: English-Anglican, English-Methodist, Maori, Highlanders. Vulteralia: English-Anglican, English-Methodist, Spanish-Catholic, French-Catholic, Spanish-Maori, French-Maori, Moriri, French-Highlander, Highlander. Cooksland: English-Anglican, Maori, Dutch-Catholic, Dutch-Protestantism. Orketers: English-Methodist, Maori. Southland: Maori, English-Methodist (Determine population yourself/system) (Cultural map refers to biggest group in cell, expect little groups of x or syncretic groups too). Vulteralia: high mixed communities. Every where else: low mixed/isolated. Intercultural tensions in every province except Cooksland and Vulteralia. Add to population demographic dashboard.
+Religious Groups:
+* Exact breakdown of the 21 religions - adherent numbers per province?
+* Church establishment - state-supported churches?
+* Mission stations - locations and tribal reach?
+* Religious tensions (Catholic vs. Protestant, Christian vs. Māori traditional)?
+Create system for breakdown of religion. Church-State separation. Missions stations will be referenced in events, assume outskirts of religious map. Catholic-Protestant tension. Christian-Maori(traditional) tension. Add to population demographic dashboard.
+4. SOCIOECONOMIC GROUPS
+Class Structure (4 groups):
+* Upper Class (landowners, merchants, officials):
+   * How many people? Names of prominent families?
+   * Average wealth/land holdings?
+   * Political influence mechanisms?
+* Middle Class (professionals, shopkeepers, skilled tradesmen):
+   * Population size?
+   * Average income?
+   * Professions included?
+* Working Class (laborers, small farmers, sailors):
+   * Population size per province?
+   * Wage levels?
+   * Living conditions?
+* Lower Class (unemployed, transient workers, poor):
+   * Population size?
+   * Poverty relief systems?
+   * Vagrancy laws?
+Create system (refer to real life during era). Add to population demographic dashboard. 
+Racial Groups Interaction:
+* Legal status of Māori (British subjects? Treaty protections?)?
+* Inter-marriage rates and attitudes?
+* Racial segregation in towns/cities?
+* Employment discrimination levels?
+* Land purchase restrictions?
+Refer to constitution and lore.
+5. INFRASTRUCTURE & DEVELOPMENT
+Transportation:
+* Roads - which provinces connected, road quality?
+* Ports - which are deep-water, which are coastal only?
+* Coastal shipping routes and frequency?
+* Horse/carriage availability and costs?
+* Travel time between major cities?
+Refer to route-road-trail map. Refer to lore. Ports - refer to coast proximity. Refer shipping routes and frequency era. No need for horse/carriage. Calculate travel time between major cities. 
+Communication:
+* Postal service - routes, frequency, cost?
+* Newspapers - names, locations, political leanings, circulation?
+* Telegraph - does it exist yet in 1853?
+Refer to era/british empire postal service. Create news outlets (start off as newspapers/refer to era as well). Telegraph come in 1862. 
+Public Services:
+* Schools - how many, where located, attendance rates?
+* Hospitals/medical facilities per province?
+* Police forces - size, organization per province?
+* Courts - locations, judges, legal system (English common law)?
+* Prisons - where located, populations?
+Create system. Refer to era.
+Development Levels:
+* Which provinces are "developed" vs. "frontier"?
+* Development metrics per province (0-100 scale)?
+* Infrastructure investment priorities?
+All frontiers (refer to cultural map for metrics). Create system after. Infrastructure decided by policies or event driven corporations.
+6. LEGAL & GOVERNANCE
+Treaty of Waitangi (1840):
+* How is it being implemented/ignored in 1853?
+* Land purchase mechanisms (Crown pre-emption)?
+* Māori governance rights under Treaty?
+* Disputes and grievances at game start?
+Refer to lore/constitution. Disputes and grievances at game start will be described event. 
+Legal Framework:
+* Criminal law - British or local colonial code?
+* Civil law systems?
+* Māori customary law recognition?
+* Land tenure law (freehold, leasehold, Māori communal)?
+Refer to era and constitution.
+Provincial Powers:
+* What can provinces control (education, public works, land sales)?
+* What is centrally controlled?
+* Provincial revenue sources?
+* Provincial budgets at game start?
+Create system/decide
+7. MILITARY & SECURITY
+Armed Forces:
+* British Imperial troops stationed - how many, where?
+* Colonial militia - size, organization per province?
+* Māori warriors - tribal military capacity?
+* Armament levels (muskets, cannons availability)?
+Decide/create system/refer to era (future policy will decide)
+Conflicts:
+* Current state of peace/war in 1853?
+* Recent conflicts and their outcomes?
+* Tensions likely to explode (Taranaki land disputes?)?
+* Fortifications and defensive works?
+Refer to lore. Yes to fortification and defensive works but event driven.
+8. HISTORICAL EVENTS & TIMELINE
+Pre-1853 Major Events:
+* Key land purchases and their controversies?
+* Significant Māori-Pākehā conflicts?
+* Economic booms/busts?
+* Natural disasters?
+* Political crises?
+Refer to lore
+1853 Starting Conditions:
+* Current major crisis/opportunity at game start?
+* Upcoming known events (elections, land auctions, treaty negotiations)?
+* Tensions building toward future conflicts?
+Refer to lore
+Event Probabilities:
+* Gold rush likelihood and timing (Otago 1861, West Coast 1864)?
+* War probabilities (Taranaki Wars 1860)?
+* Economic crisis triggers?
+* Natural disaster frequencies?
+(Reference: AI event probabilities or GM curated events fed to AI). 
+9. AI & NPC SYSTEMS
+NPC Politicians:
+* How many NPC politicians at start? Names?
+* Distribution across parties and provinces?
+* Archetypal backgrounds (military, merchant, lawyer, landowner percentages)?
+* Leadership positions held?
+* Ideology distributions within parties?
+20 per province. Create database of names culturally relevant to each province. (Create codes page for information about provinces, constitution, lore, characters, future passed events, future passed policies (and policy vote history), and election voter history.) Yes to ideology distributions between parties. 
+NPC Voting Behavior:
+* How do different demographic groups vote?
+* Issue salience rankings by province?
+* Swing voter percentages?
+* Turnout rates by class/culture/religion?
+Create system (I’ll refine afterwards).
+AI Governor/Officials:
+* Is the Governor AI-controlled or player-controlled?
+* Crown authority - how much can override local decisions?
+* Colonial Office directives from London?
+Ai at start, players can run for position. GMs will act as Crown Authority. Colonial Directives will be events. 
+10. PLAYER STARTING CONDITIONS
+Character Creation:
+* Starting cash for players? (You mentioned £5,000 for bar admission - what's standard starting wealth?)
+* Can players choose starting province?
+* Can players choose profession at start or must work up to it?
+* Starting reputation scores (all at 50? Or based on background choices?)?
+20k. Yes. Create business-> business owner; pass bar -> lawyer; campaign -> activist/politician; hold office -> politician; Nothing -> civilian. Reputation equal to 50. (change bar to 0 if u fail, 500 if you pass) 
+Win Conditions:
+* What defines "success" in the game?
+* Are there victory conditions or is it sandbox?
+* Competitive vs. cooperative play?
+* Game end date or indefinite?
+Sand box multiplayer mmorpg. 1854-2037.
+Turn Length:
+* How long is one game turn (1 month? 3 months? 6 months?)?
+* Real-time or turn-based?
+* How many actions per turn can players take?
+One game turn = 15 daye in game
+One game turn = 24 hrs irl 
+5 actions per turn (recommend how to prevent crashes or any obstacle to running a game this long)
+11. SPECIFIC GAME MECHANICS
+Reputation System:
+* Starting reputation scores for NPC politicians?
+* How fast does reputation change?
+* Can reputation go negative (scandal/corruption)?
+* Reputation recovery mechanisms?
+Yes. Every turn. Yes. Yes. 
+Business System:
+* Starting capital requirements for the 10 company types?
+* Profit margins per industry?
+* Business failure rates?
+* Partnership/corporation options?
+Yes. Yes. No. Yes (affects stock/economy resource).
+Legal System:
+* Bar exam pass rates?
+* Lawyer income potential (fees per case type)?
+* Court case frequency?
+* Legal specialization impacts?
+No. Yes. Depends on if we create AI made cases apart of players suing players/government. Yes.
+Elections:
+* Campaign costs?
+* Campaign duration?
+* Endorsement effects?
+* Vote buying/corruption mechanics?
+Yes. Continuous if funded. Positive reputation from endorsements. Corruption-themes events but no system.

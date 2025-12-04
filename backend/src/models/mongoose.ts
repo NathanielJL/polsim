@@ -117,13 +117,72 @@ export const CompanyModel = mongoose.model<Company & Document>("Company", Compan
 
 // ===== POLICY SCHEMA =====
 const PolicySchema = new Schema({
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
   id: { type: String, unique: true, required: true },
-  proposedBy: { type: String, required: true },
+  proposedBy: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
   title: { type: String, required: true },
   description: String,
-  type: String,
+  
+  // Policy classification
+  policyType: {
+    type: String,
+    enum: [
+      'tax', 'tariff', 'land_reform', 'immigration', 'labor', 
+      'resource_regulation', 'infrastructure', 'education', 
+      'maori_rights', 'electoral_reform', 'other'
+    ],
+    default: 'other'
+  },
+  type: String, // Legacy field
   ideology: IdeologyPointSchema,
+  
+  // AI-extracted data
+  affectedResources: [String],
+  affectedProvinces: [String],
+  economicImpact: {
+    gdpChange: Number,
+    unemploymentChange: Number,
+    inflationChange: Number,
+    immigrationModifier: Number, // 0.5 = -50%, 1.5 = +50%, 2.0 = +100%
+    _id: false
+  },
+  culturalModifiers: Schema.Types.Mixed, // { Irish: 1.5, German: 2.0, Chinese: 0.5 }
+  reputationImpact: Schema.Types.Mixed, // { upper_class: -10, working_class: +15, etc }
+  resourcePriceChanges: Schema.Types.Mixed, // { timber: 0.10, wool: -0.05 }
+  estimatedRevenue: Number,
+  estimatedCost: Number,
+  
+  // Voting and status
   duration: { type: Number, default: 10 },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected", "enacted", "repealed"],
+    default: "pending",
+  },
+  votingDeadline: Date,
+  votes: {
+    yes: { type: Number, default: 0 },
+    no: { type: Number, default: 0 },
+    abstain: { type: Number, default: 0 },
+    for: { type: Number, default: 0 }, // Legacy
+    against: { type: Number, default: 0 }, // Legacy
+  },
+  voters: [{
+    playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+    vote: { type: String, enum: ['yes', 'no', 'abstain'] },
+    timestamp: Date,
+    _id: false
+  }],
+  legislatureVotes: [{
+    playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+    vote: { type: String, enum: ['yes', 'no', 'abstain'] },
+    house: { type: String, enum: ['lower', 'upper'] },
+    timestamp: Date,
+    _id: false
+  }],
+  sponsors: [{ type: Schema.Types.ObjectId, ref: 'Player' }],
+  
+  // Legacy fields
   numericEffects: {
     unemploymentChange: Number,
     gdpChange: Number,
@@ -131,22 +190,16 @@ const PolicySchema = new Schema({
     _id: false,
   },
   eventTriggerChance: { type: Number, min: 0, max: 100 },
-  status: {
-    type: String,
-    enum: ["proposed", "approved", "active", "repealed"],
-    default: "proposed",
-  },
   turnProposed: Number,
   turnApproved: Number,
   turnEnds: Number,
-  votes: {
-    for: { type: Number, default: 0 },
-    against: { type: Number, default: 0 },
-  },
+  enactedAt: Date,
+  
   createdAt: { type: Date, default: Date.now },
 });
 
 PolicySchema.index({ status: 1, turnEnds: 1 });
+PolicySchema.index({ sessionId: 1, status: 1 });
 export const PolicyModel = mongoose.model<Policy & Document>("Policy", PolicySchema);
 
 // ===== EVENT SCHEMA =====
@@ -175,18 +228,22 @@ export const EventModel = mongoose.model<Event & Document>("Event", EventSchema)
 // ===== NEWS ARTICLE SCHEMA =====
 const NewsArticleSchema = new Schema({
   id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session' },
   title: { type: String, required: true },
   content: { type: String, required: true },
-  authorId: String,
+  authorId: { type: Schema.Types.ObjectId, ref: 'Player' },
   outletId: { type: String, required: true },
-  ideology: IdeologyPointSchema,
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  tone: { type: String }, // "supportive", "critical", "neutral"
   eventId: String,
+  aiGenerated: { type: Boolean, default: false },
   approvalImpact: { type: Map, of: Number },
   turn: Number,
   createdAt: { type: Date, default: Date.now },
 });
 
 NewsArticleSchema.index({ outletId: 1, turn: 1 });
+NewsArticleSchema.index({ sessionId: 1, createdAt: -1 });
 export const NewsArticleModel = mongoose.model<NewsArticle & Document>(
   "NewsArticle",
   NewsArticleSchema
@@ -195,20 +252,22 @@ export const NewsArticleModel = mongoose.model<NewsArticle & Document>(
 // ===== NEWS OUTLET SCHEMA =====
 const NewsOutletSchema = new Schema({
   id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session' },
   name: { type: String, required: true },
-  ideology: IdeologyPointSchema,
-  ownerId: String,
-  isNational: { type: Boolean, default: false },
-  reachScope: {
-    type: String,
-    enum: ["national", "provincial", "city"],
-    default: "provincial",
+  type: { 
+    type: String, 
+    enum: ["national", "provincial"], 
+    default: "provincial" 
   },
-  articles: [String],
+  politicalStance: { type: String }, // "moderate", "progressive", "conservative", etc.
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  ownerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+  employees: [{ type: Schema.Types.ObjectId, ref: 'Player' }],
   bias: { type: Number, min: -100, max: 100, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
 
+NewsOutletSchema.index({ sessionId: 1, type: 1 });
 export const NewsOutletModel = mongoose.model<NewsOutlet & Document>(
   "NewsOutlet",
   NewsOutletSchema
@@ -337,17 +396,21 @@ const OfficeSchema = new Schema({
   sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
   type: {
     type: String,
-    enum: ['primeMinister', 'parliament', 'governor', 'ltGovernor', 'mayor', 'supremeCourt'],
+    enum: ['primeMinister', 'parliament', 'governor', 'ltGovernor', 'mayor', 'supremeCourt', 'legislative-council'],
     required: true,
   },
+  name: { type: String }, // e.g., "New Zealand - House Seat 1"
   provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
   cityId: { type: Schema.Types.ObjectId, ref: 'City' },
-  currentHolder: { type: Schema.Types.ObjectId, ref: 'Player' },
+  holderId: { type: Schema.Types.ObjectId, ref: 'Player' }, // Changed from currentHolder
+  currentHolder: { type: Schema.Types.ObjectId, ref: 'Player' }, // Keep for backward compatibility
   term: { type: Number, default: 0 },
   termLimit: { type: Number, default: 10 },
   salary: { type: Number, default: 5000 },
   powers: [{ type: String }],
   nextElection: { type: Date },
+  electedAt: { type: Date },
+  appointedAt: { type: Date },
   createdAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
@@ -371,6 +434,29 @@ const VoteSchema = new Schema({
 VoteSchema.index({ sessionId: 1, electionId: 1 });
 VoteSchema.index({ voterId: 1 });
 export const VoteModel = mongoose.model('Vote', VoteSchema);
+
+// ===== PARTY SCHEMA =====
+const PartySchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  faction: { 
+    type: String, 
+    enum: ['Loyalty League', 'Miscegenation Block', 'Broader Reform Faction'],
+    required: true 
+  },
+  platform: { type: String },
+  leaderId: { type: Schema.Types.ObjectId, ref: 'Player' },
+  members: [{ type: Schema.Types.ObjectId, ref: 'Player' }],
+  treasury: { type: Number, default: 0 },
+  partyEndorsements: [{ type: String }], // Policy IDs
+  founded: { type: Date, default: Date.now },
+  dissolved: { type: Date },
+});
+
+PartySchema.index({ sessionId: 1 });
+PartySchema.index({ leaderId: 1 });
+export const PartyModel = mongoose.model('Party', PartySchema);
 
 // ===== REPUTATION GROUP SCHEMA =====
 const ReputationGroupSchema = new Schema({
@@ -538,6 +624,9 @@ const ProvinceSchema = new Schema({
     _id: false,
   }],
   
+  // Hidden resources (for exploration system)
+  hiddenResources: [{ type: String }], // e.g., ['gold', 'silver', 'uranium']
+  
   // Legacy fields
   laws: [String],
   unemployment: { type: Number, min: 0, max: 100, default: 5 },
@@ -678,6 +767,51 @@ const PlayerPortfolioSchema = new Schema({
 PlayerPortfolioSchema.index({ playerId: 1, sessionId: 1 });
 export const PlayerPortfolioModel = mongoose.model('PlayerPortfolio', PlayerPortfolioSchema);
 
+// ===== COURT CASE SCHEMA =====
+const CourtCaseSchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  assignedLawyerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  type: { type: String, enum: ['civil', 'criminal'], required: true },
+  title: { type: String, required: true },
+  plaintiff: { type: String },
+  defendant: { type: String },
+  summary: { type: String },
+  legalIssues: [{ type: String }],
+  culturalContext: { type: String }, // 'Māori', 'British', 'Mixed'
+  difficulty: { type: Number, min: 1, max: 10 },
+  potentialOutcomes: [{
+    outcome: String,
+    probability: Number,
+    reputationImpact: Number,
+    _id: false
+  }],
+  rewardRange: {
+    min: { type: Number, default: 50 },
+    max: { type: Number, default: 500 },
+    _id: false
+  },
+  status: { 
+    type: String, 
+    enum: ['pending', 'in-progress', 'resolved', 'dismissed'],
+    default: 'pending'
+  },
+  lawyerStrategy: { type: String }, // Player's chosen strategy
+  lawyerArguments: { type: String }, // Player's legal arguments
+  outcome: { type: String }, // Final outcome
+  reward: { type: Number }, // Payment received
+  reputationChange: { type: Number }, // Rep gain/loss
+  turnCreated: { type: Number },
+  turnDue: { type: Number },
+  resolvedAt: { type: Date },
+  createdAt: { type: Date, default: Date.now }
+});
+
+CourtCaseSchema.index({ sessionId: 1, assignedLawyerId: 1 });
+CourtCaseSchema.index({ status: 1, turnDue: 1 });
+export const CourtCaseModel = mongoose.model('CourtCase', CourtCaseSchema);
+
 // ===== SESSION SCHEMA =====
 const SessionSchema = new Schema({
   name: String,
@@ -729,6 +863,8 @@ export const models = {
   Election: ElectionModel,
   Office: OfficeModel,
   Vote: VoteModel,
+  Party: PartyModel,
   ReputationGroup: ReputationGroupModel,
   PlayerReputation: PlayerReputationModel,
+  CourtCase: CourtCaseModel,
 };

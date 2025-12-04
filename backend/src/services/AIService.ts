@@ -10,14 +10,18 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { Event, Policy, PopulationGroup, IdeologyPoint } from "../models/types";
+import ZealandiaContext from "./ZealandiaContext";
 
 const client = new Anthropic();
+
+// Load Zealandia context on startup
+ZealandiaContext.loadContext();
 
 // ===== CONFIGURATION =====
 const CONFIG = {
   MODEL: "claude-3-5-sonnet-20241022",
   MAX_TOKENS: 2048,
-  CACHE_TTL: 86400000, // 24 hours
+  CACHE_TTL: 86400000, // 24 hours (cache AI responses to save money)
 };
 
 // Simple in-memory cache (replace with Redis in production)
@@ -436,3 +440,334 @@ export function getCacheStats() {
     memorySafe: cache.size < 10000,
   };
 }
+
+  /**
+   * Analyze policy proposal in natural language
+   * Extract structured data and calculate impacts
+   */
+  async analyzePolicyProposal(title: string, description: string): Promise<any> {
+    const cacheK = cacheKey("policy-analysis", title, description);
+    const cached = getCached(cacheK);
+    if (cached) return cached;
+
+    try {
+      const context = ZealandiaContext.getAIContext();
+      
+      const prompt = `You are analyzing a policy proposal for the Zealandia political simulation.
+
+${context}
+
+POLICY PROPOSAL:
+Title: ${title}
+Description: ${description}
+
+Extract the following information and respond ONLY with valid JSON:
+
+{
+  "success": true,
+  "policyType": "tax|tariff|land_reform|immigration|labor|resource_regulation|infrastructure|education|maori_rights|electoral_reform|other",
+  "summary": "one sentence summary of the policy",
+  "affectedResources": ["timber", "wool", etc],
+  "affectedProvinces": ["province names if specific, empty if all"],
+  "economicImpact": {
+    "gdpChange": 0.05,
+    "unemploymentChange": -0.02,
+    "inflationChange": 0.01
+  },
+  "reputationImpact": {
+    "upper_class": -10,
+    "middle_class": 5,
+    "working_class": 15,
+    "lower_class": 10
+  },
+  "resourcePriceChanges": {
+    "timber": 0.10
+  },
+  "estimatedRevenue": 12000,
+  "estimatedCost": 5000
+}
+
+Analyze based on 1853 New Zealand context.`;
+
+      const response = await client.messages.create({
+        model: CONFIG.MODEL,
+        max_tokens: CONFIG.MAX_TOKENS,
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = response.content[0];
+      if (content.type !== "text") {
+        throw new Error("Unexpected response type");
+      }
+
+      const result = JSON.parse(content.text);
+      setCached(cacheK, result);
+      return result;
+    } catch (error: any) {
+      console.error("AI policy analysis error:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async analyzeGMEvent(title: string, description: string): Promise<any> {
+    const cacheK = cacheKey("event-analysis", title, description);
+    const cached = getCached(cacheK);
+    if (cached) return cached;
+
+    try {
+      const context = ZealandiaContext.getAIContext();
+      
+      const prompt = `You are analyzing a Game Master event for the Zealandia political simulation.
+
+${context}
+
+EVENT:
+Title: ${title}
+Description: ${description}
+
+Extract information and respond ONLY with valid JSON:
+Title: ${title}
+Description: ${description}
+
+Extract information and respond ONLY with valid JSON:
+
+{
+  "success": true,
+  "eventType": "natural_disaster|economic_crisis|resource_discovery|war|immigration_wave|epidemic|other",
+  "severity": 5,
+  "duration": 3,
+  "summary": "one sentence",
+  "affectedProvinces": [],
+  "affectedResources": [],
+  "effects": {
+    "population": { "change": -500, "provinces": ["Southland"] },
+    "gdp": { "changePercent": -0.15, "provinces": ["all"] },
+    "resources": {
+      "timber": { "supplyChange": -0.20, "priceChange": 0.30 }
+    },
+    "unemployment": { "changePercent": 0.05 },
+    "reputation": { "government": -20 }
+  }
+}
+
+Be realistic for 1853 New Zealand.`;
+
+      const response = await client.messages.create({
+        model: CONFIG.MODEL,
+        max_tokens: CONFIG.MAX_TOKENS,
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = response.content[0];
+      if (content.type !== "text") {
+        throw new Error("Unexpected response type");
+      }
+
+      const result = JSON.parse(content.text);
+      setCached(cacheK, result);
+      return result;
+    } catch (error: any) {
+      console.error("AI event analysis error:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Generate news article from GM event
+   * Creates neutral news coverage for 3 AI national newspapers
+   */
+  async generateNewsFromEvent(
+    eventTitle: string, 
+    eventDescription: string,
+    eventType: string,
+    affectedProvinces: string[]
+  ): Promise<any> {
+    const cacheK = cacheKey("news-gen", eventTitle, eventDescription);
+    const cached = getCached(cacheK);
+    if (cached) return cached;
+
+    try {
+      const context = ZealandiaContext.getAIContext();
+      
+      const prompt = `You are a news writer for Zealandia's national newspapers in 1854.
+
+${context}
+
+EVENT TO REPORT:
+Title: ${eventTitle}
+Description: ${eventDescription}
+Type: ${eventType}
+Affected Provinces: ${affectedProvinces.join(', ')}
+
+Generate THREE news articles about this event, one for each newspaper with their editorial stance.
+Respond ONLY with valid JSON:
+
+{
+  "success": true,
+  "articles": [
+    {
+      "outlet": "The Zealandia Gazette",
+      "stance": "Moderate/Government-Aligned/Populist",
+      "headline": "concise headline (8-12 words)",
+      "content": "full article text (300-400 words, 1854 newspaper style, formal tone)",
+      "tone": "neutral/factual"
+    },
+    {
+      "outlet": "The Progressive Herald",
+      "stance": "Progressive/Reformist",
+      "headline": "concise headline emphasizing reform angle",
+      "content": "article with progressive spin (300-400 words)",
+      "tone": "optimistic/reform-focused"
+    },
+    {
+      "outlet": "The Frontier Economist",
+      "stance": "Frontier/Economist",
+      "headline": "concise headline emphasizing economic impact",
+      "content": "article focusing on economic/frontier angle (300-400 words)",
+      "tone": "practical/economic analysis"
+    }
+  ]
+}
+
+Write in authentic 1854 newspaper style: formal language, no contractions, proper Victorian prose.
+Each article should present same facts but with different editorial emphasis based on newspaper stance.`;
+
+      const response = await client.messages.create({
+        model: CONFIG.MODEL,
+        max_tokens: 3000, // More tokens for 3 articles
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = response.content[0];
+      if (content.type !== "text") {
+        throw new Error("Unexpected response type");
+      }
+
+      const result = JSON.parse(content.text);
+      setCached(cacheK, result);
+      return result;
+    } catch (error: any) {
+      console.error("AI news generation error:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+  
+  /**
+   * Generate a court case for a lawyer
+   * 1 case per lawyer per turn (civil or criminal)
+   */
+  async generateCourtCase(
+    sessionId: string,
+    lawyerId: string,
+    province: string,
+    currentTurn: number
+  ): Promise<any> {
+    try {
+      // Get Zealandia context
+      const constitution = ZealandiaContext.getConstitutionContext();
+      const lore = ZealandiaContext.getLoreContext();
+      
+      const prompt = `You are generating a legal case for a lawyer in Zealandia, a fictional nation in the year 1854.
+
+CONTEXT:
+${constitution}
+
+LEGAL SYSTEM:
+${lore}
+
+LOCATION: ${province} Province
+TURN: ${currentTurn}
+
+Generate a realistic legal case for this era. The case should reflect:
+- 1850s legal issues (land disputes, treaty violations, property rights, contracts, theft, assault)
+- Tension between British common law and Māori customary law
+- Colonial economic issues (land sales, resource rights, trade disputes)
+- Cultural conflicts (language barriers, different legal traditions)
+
+Case types:
+- CIVIL: Land disputes, contract violations, property claims, inheritance, debt collection
+- CRIMINAL: Theft, assault, fraud, liquor law violations, illegal timber harvesting
+
+Return JSON format:
+{
+  "success": true,
+  "case": {
+    "caseId": "case-${currentTurn}-${Date.now()}",
+    "type": "civil" or "criminal",
+    "title": "brief case name (e.g., 'MacDonald v. Te Arawa Land Trust')",
+    "plaintiff": "plaintiff name and brief description",
+    "defendant": "defendant name and brief description",
+    "summary": "2-3 sentence case summary",
+    "legalIssues": ["primary legal issue", "secondary legal issue"],
+    "culturalContext": "Māori/British/Mixed - cultural dimension of case",
+    "difficulty": 1-10 (1=simple, 10=complex constitutional issue),
+    "potentialOutcomes": [
+      {
+        "outcome": "outcome description",
+        "probability": 0.0-1.0,
+        "reputationImpact": -10 to +10
+      }
+    ],
+    "rewardRange": {
+      "min": 50,
+      "max": 500
+    }
+  }
+}
+
+Make the case feel authentic to 1854 colonial New Zealand. Include realistic names (British, Scottish, Māori). 
+Focus on issues that would genuinely arise in this historical setting.`;
+
+      const response = await client.messages.create({
+        model: CONFIG.MODEL,
+        max_tokens: 1500,
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = response.content[0];
+      if (content.type !== "text") {
+        throw new Error("Unexpected response type");
+      }
+
+      const result = JSON.parse(content.text);
+      return result;
+    } catch (error: any) {
+      console.error("AI court case generation error:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+}
+
+export { AIService };

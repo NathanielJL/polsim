@@ -21,6 +21,14 @@ import gmRoutes from "./routes/gm";
 import electionRoutes from "./routes/elections";
 import businessRoutes from "./routes/business";
 import legalRoutes from "./routes/legal";
+import policyRoutes from "./routes/policies";
+import newsRoutes from "./routes/news";
+import actionRoutes from "./routes/actions";
+import turnRoutes from "./routes/turns";
+import partyRoutes from "./routes/parties";
+import legislatureRoutes from "./routes/legislature";
+import resourceRoutes from "./routes/resources";
+import immigrationRoutes from "./routes/immigration";
 import { TurnScheduler } from "./services/TurnScheduler";
 
 dotenv.config();
@@ -130,6 +138,30 @@ app.use("/api/business", businessRoutes);
 
 // Legal services routes
 app.use("/api/legal", legalRoutes);
+
+// Policy submission routes (AI-powered)
+app.use("/api/policies", policyRoutes);
+
+// News routes (AI-generated + player-created articles)
+app.use("/api/news", newsRoutes);
+
+// Action point tracking routes
+app.use("/api/actions", actionRoutes);
+
+// Turn management routes
+app.use("/api/turns", turnRoutes);
+
+// Political party routes
+app.use("/api/parties", partyRoutes);
+
+// Legislature routes (bicameral parliament)
+app.use("/api/legislature", legislatureRoutes);
+
+// Resource exploration routes
+app.use("/api/resources", resourceRoutes);
+
+// Immigration system routes
+app.use("/api/immigration", immigrationRoutes);
 
 // Create or join game session
 app.post("/api/sessions", (req: Request, res: Response) => {
