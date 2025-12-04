@@ -1,9 +1,10 @@
 /**
  * Population Distribution Service
- * Distributes 95,000 population across provinces based on:
- * - Biome habitability (1850s New Zealand context)
- * - City locations
- * - Terrain factors
+ * Distributes European/Mixed settler population (30,000) across provinces:
+ * - 22,000 rural Europeans/Mixed
+ * - 8,000 urban Europeans/Mixed
+ * - Total NZ population: 95,000 (remaining 65,000 are Indigenous Māori tracked via culture)
+ * - Based on 1850s settlement patterns
  */
 
 import { CellModel, CityModel, ProvinceModel } from '../models/mongoose';
@@ -13,7 +14,7 @@ interface BiomeHabitability {
   [biomeId: number]: number;
 }
 
-// Biome habitability weights for 1850s New Zealand settlement patterns
+// Biome habitability weights for 1850s European settlement patterns
 const BIOME_HABITABILITY: BiomeHabitability = {
   1: 0.15,  // Marine (coastal settlements, fishing villages)
   2: 0.20,  // Hot desert (low habitability)
@@ -29,7 +30,9 @@ const BIOME_HABITABILITY: BiomeHabitability = {
   12: 0.05, // Glacier (uninhabitable)
 };
 
-const TOTAL_POPULATION = 95000;
+const TOTAL_SETTLER_POPULATION = 30000; // European/Mixed only
+const RURAL_POPULATION = 22000;
+const URBAN_POPULATION = 8000;
 const CITY_POPULATION_MULTIPLIER = 5; // Cities attract 5x base population
 
 export class PopulationDistributionService {
@@ -82,7 +85,7 @@ export class PopulationDistributionService {
     
     for (const cell of cells) {
       const score = cellScores.get(cell._id.toString()) || 0;
-      const cellPopulation = Math.floor((score / totalScore) * TOTAL_POPULATION);
+      const cellPopulation = Math.floor((score / totalScore) * TOTAL_SETTLER_POPULATION);
       
       if (cell.provinceId) {
         const provinceId = cell.provinceId.toString();
@@ -104,6 +107,9 @@ export class PopulationDistributionService {
     await this.distributeCityPopulations(sessionId, cities, cellScores, totalScore);
     
     console.log('✅ Population distribution complete');
+    console.log(`   European/Mixed Settlers: ${TOTAL_SETTLER_POPULATION.toLocaleString()} (${RURAL_POPULATION.toLocaleString()} rural + ${URBAN_POPULATION.toLocaleString()} urban)`);
+    console.log(`   Indigenous Māori: ~65,000 (tracked via culture data)`);
+    console.log(`   Total NZ Population: ~95,000`);
   }
   
   /**
@@ -119,14 +125,12 @@ export class PopulationDistributionService {
       if (!city.cellId) continue;
       
       const cellScore = cellScores.get(city.cellId.toString()) || 0;
-      const cityPopulation = Math.floor((cellScore / totalScore) * TOTAL_POPULATION);
-      
-      // Cities get majority of their cell's population
-      const finalCityPop = Math.floor(cityPopulation * 0.7);
+      // Urban population is 8k out of 30k total settlers (26.7%)
+      const cityPopulation = Math.floor((cellScore / totalScore) * URBAN_POPULATION);
       
       await CityModel.updateOne(
         { _id: city._id },
-        { population: finalCityPop }
+        { population: cityPopulation }
       );
       
       console.log(`    ${city.name}: ${finalCityPop.toLocaleString()} (${city.isCapital ? 'capital' : 'city'})`);

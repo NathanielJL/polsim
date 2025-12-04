@@ -1,6 +1,9 @@
 /**
  * Population Distribution Runner
- * Distributes 95,000 population across provinces based on biome habitability
+ * Distributes European/Mixed settler population (30,000) across provinces
+ * - 22,000 rural Europeans/Mixed
+ * - 8,000 urban Europeans/Mixed  
+ * - Remaining 65,000 Indigenous Māori tracked via culture data
  * Run: node run-population-distribution.js <sessionId>
  */
 
@@ -11,7 +14,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
-const TARGET_POPULATION = 95000;
+const TARGET_POPULATION = 30000; // European/Mixed settlers only
 
 // Biome habitability weights (0-1 scale)
 const BIOME_HABITABILITY = {
@@ -183,8 +186,10 @@ async function distributePopulation(sessionIdString) {
     // Summary
     const totalAssigned = provinceScores.reduce((sum, p) => sum + p.province.population, 0);
     console.log('📊 Summary:');
+    console.log(`   European/Mixed Settlers: ${totalAssigned.toLocaleString()}`);
     console.log(`   Target: ${TARGET_POPULATION.toLocaleString()}`);
-    console.log(`   Assigned: ${totalAssigned.toLocaleString()}`);
+    console.log(`   Indigenous Māori: ~65,000 (tracked via culture)`);
+    console.log(`   Total NZ Population: ~95,000`);
     console.log(`   Provinces: ${provinceScores.length}`);
 
   } catch (error) {
