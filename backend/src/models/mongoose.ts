@@ -44,7 +44,23 @@ const PlayerSchema = new Schema({
   cash: { type: Number, default: 100000 },
   reputation: { type: Number, default: 0 },
   reputationByGroup: { type: Map, of: Number, default: new Map() },
-  currentLocation: String,
+  
+  // Location & Office
+  currentProvinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  heldOffice: {
+    type: {
+      type: String,
+      enum: ['governor', 'lt-governor', 'prime-minister', 'cabinet', 'parliament', 'supreme-court', 'provincial-court', null],
+      default: null,
+    },
+    provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+    position: String, // e.g., "Minister of Finance", "Chief Justice"
+    electedAt: Date,
+    _id: false,
+  },
+  lastProvinceMove: { type: Date }, // For week cooldown
+  isAI: { type: Boolean, default: false }, // NPC flag
+  
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   isGameMaster: { type: Boolean, default: false },
@@ -198,27 +214,346 @@ export const NewsOutletModel = mongoose.model<NewsOutlet & Document>(
   NewsOutletSchema
 );
 
-// ===== PROVINCE SCHEMA =====
+// ===== CELL SCHEMA (Azgaar Map Terrain) =====
+const CellSchema = new Schema({
+  azgaarId: { type: Number, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  vertices: [Number], // For map rendering
+  connections: [Number],
+  position: { type: [Number], required: true }, // [x, y]
+  height: { type: Number, required: true },
+  temperature: { type: Number, required: true },
+  area: { type: Number, required: true },
+  biome: { type: Number, required: true },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  cultureId: { type: Number },
+  religionId: { type: Number },
+  hasRiver: { type: Boolean, default: false },
+  habitability: { type: Number, min: 0, max: 1, default: 0.5 }, // For population distribution
+}, { timestamps: true });
+
+CellSchema.index({ sessionId: 1, provinceId: 1 });
+CellSchema.index({ sessionId: 1, azgaarId: 1 }, { unique: true });
+export const CellModel = mongoose.model("Cell", CellSchema);
+
+// ===== CITY SCHEMA (From Azgaar Burgs) =====
+const CitySchema = new Schema({
+  azgaarId: { type: Number, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  position: { type: [Number], required: true }, // [x, y]
+  cellId: { type: Schema.Types.ObjectId, ref: 'Cell' },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province', required: true },
+  population: { type: Number, default: 0 },
+  isCapital: { type: Boolean, default: false },
+  economicType: { 
+    type: String, 
+    enum: ['port', 'inland', 'mining', 'agricultural'], 
+    default: 'inland' 
+  },
+}, { timestamps: true });
+
+CitySchema.index({ sessionId: 1, provinceId: 1 });
+CitySchema.index({ sessionId: 1, azgaarId: 1 }, { unique: true });
+export const CityModel = mongoose.model("City", CitySchema);
+
+// ===== CULTURE SCHEMA =====
+const CultureSchema = new Schema({
+  azgaarId: { type: Number, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  code: { type: String, required: true },
+}, { timestamps: true });
+
+CultureSchema.index({ sessionId: 1, azgaarId: 1 }, { unique: true });
+export const CultureModel = mongoose.model("Culture", CultureSchema);
+
+// ===== RELIGION SCHEMA =====
+const ReligionSchema = new Schema({
+  azgaarId: { type: Number, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  code: { type: String, required: true },
+  type: { type: String, default: 'Unknown' },
+}, { timestamps: true });
+
+ReligionSchema.index({ sessionId: 1, azgaarId: 1 }, { unique: true });
+export const ReligionModel = mongoose.model("Religion", ReligionSchema);
+
+// ===== RIVER SCHEMA =====
+const RiverSchema = new Schema({
+  azgaarId: { type: Number, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  source: { type: Number }, // Cell ID
+  mouth: { type: Number },  // Cell ID
+  cells: [Number], // Path of cells
+}, { timestamps: true });
+
+RiverSchema.index({ sessionId: 1, azgaarId: 1 }, { unique: true });
+export const RiverModel = mongoose.model("River", RiverSchema);
+
+// ===== ELECTION SCHEMA =====
+const ElectionSchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  officeType: { 
+    type: String, 
+    enum: ['primeMinister', 'parliament', 'governor', 'mayor'],
+    required: true 
+  },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  candidates: [{
+    playerId: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
+    platform: { type: String, required: true },
+    ideology: IdeologyPointSchema,
+    endorsements: [{ type: Schema.Types.ObjectId, ref: 'Player' }],
+    fundingRaised: { type: Number, default: 0 },
+    _id: false,
+  }],
+  votingOpen: { type: Boolean, default: false },
+  votingCloses: { type: Date },
+  results: {
+    winner: { type: Schema.Types.ObjectId, ref: 'Player' },
+    voteBreakdown: { type: Map, of: Number },
+    turnout: { type: Number, min: 0, max: 100 },
+    _id: false,
+  },
+  status: {
+    type: String,
+    enum: ['announced', 'campaigning', 'voting', 'completed'],
+    default: 'announced',
+  },
+  createdAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+ElectionSchema.index({ sessionId: 1, status: 1 });
+ElectionSchema.index({ sessionId: 1, officeType: 1 });
+export const ElectionModel = mongoose.model('Election', ElectionSchema);
+
+// ===== OFFICE SCHEMA =====
+const OfficeSchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  type: {
+    type: String,
+    enum: ['primeMinister', 'parliament', 'governor', 'ltGovernor', 'mayor', 'supremeCourt'],
+    required: true,
+  },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  cityId: { type: Schema.Types.ObjectId, ref: 'City' },
+  currentHolder: { type: Schema.Types.ObjectId, ref: 'Player' },
+  term: { type: Number, default: 0 },
+  termLimit: { type: Number, default: 10 },
+  salary: { type: Number, default: 5000 },
+  powers: [{ type: String }],
+  nextElection: { type: Date },
+  createdAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+OfficeSchema.index({ sessionId: 1, type: 1 });
+OfficeSchema.index({ currentHolder: 1 });
+export const OfficeModel = mongoose.model('Office', OfficeSchema);
+
+// ===== VOTE SCHEMA =====
+const VoteSchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  voterId: { type: String, required: true },
+  isNPC: { type: Boolean, default: false },
+  electionId: { type: Schema.Types.ObjectId, ref: 'Election' },
+  policyId: { type: Schema.Types.ObjectId, ref: 'Policy' },
+  choice: { type: String, required: true },
+  turn: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+VoteSchema.index({ sessionId: 1, electionId: 1 });
+VoteSchema.index({ voterId: 1 });
+export const VoteModel = mongoose.model('Vote', VoteSchema);
+
+// ===== REPUTATION GROUP SCHEMA =====
+const ReputationGroupSchema = new Schema({
+  id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  name: { type: String, required: true },
+  type: { 
+    type: String, 
+    enum: ['political', 'cultural', 'religious', 'racial', 'socioeconomic'],
+    required: true 
+  },
+  archetypeId: { type: String }, // For political groups
+  cultureId: { type: String }, // For cultural groups
+  religionId: { type: String }, // For religious groups
+  population: { type: Number, required: true },
+  ideology: IdeologyPointSchema,
+  traits: [{ type: String }],
+  politicalPower: { type: Number, min: 0, max: 100, default: 50 },
+  economicPower: { type: Number, min: 0, max: 100, default: 50 },
+  createdAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+ReputationGroupSchema.index({ sessionId: 1, type: 1 });
+ReputationGroupSchema.index({ sessionId: 1, archetypeId: 1 });
+ReputationGroupSchema.index({ sessionId: 1, cultureId: 1 });
+ReputationGroupSchema.index({ sessionId: 1, religionId: 1 });
+export const ReputationGroupModel = mongoose.model('ReputationGroup', ReputationGroupSchema);
+
+// ===== PLAYER REPUTATION SCHEMA =====
+const PlayerReputationSchema = new Schema({
+  playerId: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+  groupId: { type: Schema.Types.ObjectId, ref: 'ReputationGroup', required: true },
+  approval: { type: Number, min: 0, max: 100, default: 50 },
+  lastChanged: { type: Date, default: Date.now },
+  history: [{
+    turn: { type: Number, required: true },
+    approval: { type: Number, min: 0, max: 100 },
+    changeReason: { type: String },
+    _id: false,
+  }],
+}, { timestamps: true });
+
+PlayerReputationSchema.index({ playerId: 1, sessionId: 1 });
+PlayerReputationSchema.index({ groupId: 1 });
+PlayerReputationSchema.index({ playerId: 1, groupId: 1 }, { unique: true });
+export const PlayerReputationModel = mongoose.model('PlayerReputation', PlayerReputationSchema);
+
+// ===== PROVINCE SCHEMA (Updated for Azgaar Integration) =====
 const ProvinceSchema = new Schema({
   id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
   name: { type: String, required: true },
-  laws: [String],
+  azgaarId: { type: Number },
+  color: { type: String }, // Hex color from map
+  centerCoords: { type: [Number] }, // [x, y]
+  area: { type: Number, default: 0 },
+  population: { type: Number, default: 0 },
+  
+  // Geographic data
+  cellIds: [{ type: Schema.Types.ObjectId, ref: 'Cell' }],
+  cityIds: [{ type: Schema.Types.ObjectId, ref: 'City' }],
+  capitalCityId: { type: Schema.Types.ObjectId, ref: 'City' },
+  
+  // Economic data (1850s Zealandia)
   gdp: { type: Number, default: 1000000 },
+  developmentLevel: { type: Number, min: 0, max: 100, default: 5 }, // % of land exploited
+  averageTemperature: { type: Number }, // Celsius
+  
+  resources: {
+    // Forestry & Plant Products
+    forestry: {
+      timber: { type: Number, default: 0 },
+      flax: { type: Number, default: 0 },
+      hemp: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Agriculture
+    agriculture: {
+      grain: { type: Number, default: 0 },
+      vegetables: { type: Number, default: 0 },
+      fruit: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Livestock Products
+    livestock: {
+      wool: { type: Number, default: 0 },
+      leather: { type: Number, default: 0 },
+      meat: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Marine Resources
+    marine: {
+      fish: { type: Number, default: 0 },
+      whaling: { type: Number, default: 0 },
+      sealing: { type: Number, default: 0 },
+      shellfish: { type: Number, default: 0 },
+      pearls: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Mining - Precious Metals
+    miningPrecious: {
+      gold: { type: Number, default: 0 },
+      silver: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Mining - Industrial
+    miningIndustrial: {
+      coal: { type: Number, default: 0 },
+      iron: { type: Number, default: 0 },
+      copper: { type: Number, default: 0 },
+      tin: { type: Number, default: 0 },
+      zinc: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Mining - Specialty
+    miningSpecialty: {
+      sulfur: { type: Number, default: 0 },
+      saltpeter: { type: Number, default: 0 },
+      graphite: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Quarrying
+    quarrying: {
+      stone: { type: Number, default: 0 },
+      marble: { type: Number, default: 0 },
+      clay: { type: Number, default: 0 },
+      kaolin: { type: Number, default: 0 },
+      _id: false,
+    },
+    
+    // Special Resources
+    special: {
+      guano: { type: Number, default: 0 },
+      ice: { type: Number, default: 0 },
+      _id: false,
+    },
+    _id: false,
+  },
+  
+  riverAccessBonus: { type: Number, min: 0, max: 0.25, default: 0 }, // GDP multiplier
+  
+  // Political data
+  defaultIdeology: IdeologyPointSchema,
+  currentGovernor: { type: Schema.Types.ObjectId, ref: 'Player' },
+  currentLtGovernor: { type: Schema.Types.ObjectId, ref: 'Player' },
+  hasLegislature: { type: Boolean, default: false },
+  
+  // Cultural/Religious composition
+  culturalComposition: [{
+    cultureId: { type: Number, required: true },
+    percentage: { type: Number, min: 0, max: 100, required: true },
+    _id: false,
+  }],
+  religiousComposition: [{
+    religionId: { type: Number, required: true },
+    percentage: { type: Number, min: 0, max: 100, required: true },
+    _id: false,
+  }],
+  
+  // Legacy fields
+  laws: [String],
   unemployment: { type: Number, min: 0, max: 100, default: 5 },
   populationGroups: [PopulationGroupSchema],
   markets: [String],
   companies: [String],
-  cities: [String],
   governmentType: {
     type: String,
     enum: ["democracy", "monarchy", "dictatorship"],
     default: "democracy",
   },
-  currentLeader: String,
   createdAt: { type: Date, default: Date.now },
 });
 
-ProvinceSchema.index({ name: 1 });
+ProvinceSchema.index({ sessionId: 1, name: 1 });
+ProvinceSchema.index({ sessionId: 1, azgaarId: 1 });
 export const ProvinceModel = mongoose.model<Province & Document>("Province", ProvinceSchema);
 
 // ===== GAME STATE SCHEMA =====
@@ -386,4 +721,14 @@ export const models = {
   StockMarket: StockMarketModel,
   MarketItem: MarketItemModel,
   PlayerPortfolio: PlayerPortfolioModel,
+  Cell: CellModel,
+  City: CityModel,
+  Culture: CultureModel,
+  Religion: ReligionModel,
+  River: RiverModel,
+  Election: ElectionModel,
+  Office: OfficeModel,
+  Vote: VoteModel,
+  ReputationGroup: ReputationGroupModel,
+  PlayerReputation: PlayerReputationModel,
 };

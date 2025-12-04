@@ -16,6 +16,11 @@ import authRoutes from "./routes/auth";
 import playerRoutes from "./routes/players";
 import sessionRoutes from "./routes/sessions";
 import dashboardRoutes from "./routes/dashboard";
+import mapRoutes from "./routes/map";
+import gmRoutes from "./routes/gm";
+import electionRoutes from "./routes/elections";
+import businessRoutes from "./routes/business";
+import legalRoutes from "./routes/legal";
 import { TurnScheduler } from "./services/TurnScheduler";
 
 dotenv.config();
@@ -110,6 +115,21 @@ app.use("/api/sessions", sessionRoutes);
 // Dashboard and trading routes
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/trading", dashboardRoutes);
+
+// Map import and data routes
+app.use("/api/map", mapRoutes);
+
+// GM dashboard routes
+app.use("/api/gm", gmRoutes);
+
+// Elections and voting routes
+app.use("/api/elections", electionRoutes);
+
+// Business and companies routes
+app.use("/api/business", businessRoutes);
+
+// Legal services routes
+app.use("/api/legal", legalRoutes);
 
 // Create or join game session
 app.post("/api/sessions", (req: Request, res: Response) => {

@@ -41,6 +41,26 @@ export interface Player {
   actionsRemaining: number; // 5 per turn
   companyOwned?: string; // Company ID if entrepreneur
   newsOutletOwned?: string; // News outlet ID if press owner
+  
+  // Political career
+  isCandidate?: boolean; // Currently running for office
+  candidacyFor?: string; // Office ID they're running for
+  officeHeld?: string; // Current office ID
+  electionHistory?: Array<{
+    electionId: string;
+    office: string;
+    won: boolean;
+    votes: number;
+    turn: number;
+  }>;
+  
+  // Professional career
+  profession?: 'lawyer' | 'journalist' | 'entrepreneur' | 'politician' | 'citizen';
+  professionalCredentials?: {
+    barAdmitted?: boolean; // Lawyer certification
+    cases?: number; // Cases handled
+    licenses?: string[]; // Various professional licenses
+  };
 }
 
 export interface Market {
@@ -127,15 +147,160 @@ export interface NewsOutlet {
 export interface Province {
   id: string;
   name: string;
-  laws: string[]; // Policy IDs
+  
+  // Geographic data
+  azgaarId?: number;
+  color?: string;
+  centerCoords?: [number, number];
+  area?: number;
+  population?: number;
+  cellIds?: string[];
+  cityIds?: string[];
+  capitalCityId?: string;
+  
+  // Economic data
   gdp: number;
+  developmentLevel?: number; // 0-100%, how much land is actually exploited
+  averageTemperature?: number; // Celsius
+  
+  resources?: {
+    // Forestry & Plant Products
+    forestry?: {
+      timber?: number;
+      flax?: number;
+      hemp?: number;
+    };
+    
+    // Agriculture
+    agriculture?: {
+      grain?: number;
+      vegetables?: number;
+      fruit?: number;
+    };
+    
+    // Livestock Products
+    livestock?: {
+      wool?: number;
+      leather?: number;
+      meat?: number;
+    };
+    
+    // Marine Resources
+    marine?: {
+      fish?: number;
+      whaling?: number;
+      sealing?: number;
+      shellfish?: number;
+      pearls?: number;
+    };
+    
+    // Mining - Precious Metals
+    miningPrecious?: {
+      gold?: number;
+      silver?: number;
+    };
+    
+    // Mining - Industrial
+    miningIndustrial?: {
+      coal?: number;
+      iron?: number;
+      copper?: number;
+      tin?: number;
+      zinc?: number;
+    };
+    
+    // Mining - Specialty
+    miningSpecialty?: {
+      sulfur?: number;
+      saltpeter?: number;
+      graphite?: number;
+    };
+    
+    // Quarrying
+    quarrying?: {
+      stone?: number;
+      marble?: number;
+      clay?: number;
+      kaolin?: number; // China clay
+    };
+    
+    // Special Resources
+    special?: {
+      guano?: number; // Fertilizer from bird droppings
+      ice?: number; // Export from cold regions
+    };
+  };
+  
+  riverAccessBonus?: number;
+  
+  // Political data
+  defaultIdeology?: IdeologyPoint;
+  currentGovernor?: string;
+  currentLtGovernor?: string;
+  hasLegislature?: boolean;
+  
+  // Cultural composition
+  culturalComposition?: Array<{ cultureId: number; percentage: number }>;
+  religiousComposition?: Array<{ religionId: number; percentage: number }>;
+  
+  // Legacy fields
+  laws: string[]; // Policy IDs
   unemployment: number;
   populationGroups: PopulationGroup[];
   markets: Market[];
   companies: Company[];
   cities: string[]; // City IDs
-  governmentType: "democracy" | "monarchy" | "dictatorship"; // Can change via policy/event
-  currentLeader?: string; // Player ID
+  governmentType: "democracy" | "monarchy" | "dictatorship";
+  currentLeader?: string; // Player ID (deprecated, use currentGovernor)
+}
+
+export interface Election {
+  id: string;
+  sessionId: string;
+  officeType: 'primeMinister' | 'parliament' | 'governor' | 'mayor';
+  provinceId?: string; // For provincial/local elections
+  candidates: Array<{
+    playerId: string;
+    platform: string; // Campaign promises
+    ideology: IdeologyPoint;
+    endorsements: string[]; // Player/NPC IDs
+    fundingRaised: number;
+  }>;
+  votingOpen: boolean;
+  votingCloses: Date;
+  results?: {
+    winner: string; // Player ID
+    voteBreakdown: Map<string, number>; // candidateId -> votes
+    turnout: number; // Percentage
+  };
+  status: 'announced' | 'campaigning' | 'voting' | 'completed';
+  createdAt: Date;
+}
+
+export interface Office {
+  id: string;
+  sessionId: string;
+  type: 'primeMinister' | 'parliament' | 'governor' | 'ltGovernor' | 'mayor' | 'supremeCourt';
+  provinceId?: string; // For provincial offices
+  cityId?: string; // For city offices
+  currentHolder?: string; // Player ID
+  term: number; // Turns in office
+  termLimit: number; // Max turns before re-election
+  salary: number; // £ per turn
+  powers: string[]; // 'proposePolicy', 'veto', 'appointJudges', etc.
+  nextElection?: Date;
+}
+
+export interface Vote {
+  id: string;
+  sessionId: string;
+  voterId: string; // Player or NPC ID
+  isNPC: boolean;
+  electionId?: string; // For elections
+  policyId?: string; // For policy votes
+  choice: string; // Candidate ID or 'for'/'against'
+  turn: number;
+  createdAt: Date;
 }
 
 export interface GameState {

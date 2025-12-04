@@ -1,0 +1,413 @@
+/* Elections Page Styles */
+
+.elections-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.page-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.elections-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr 250px;
+  gap: 2rem;
+}
+
+/* Elections List */
+.elections-list {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.elections-list h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.no-elections {
+  color: #95a5a6;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.election-card {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.election-card:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.election-card.selected {
+  border-color: #3498db;
+  background: #eaf4fb;
+}
+
+.election-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.election-header h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-announced {
+  background: #ffeaa7;
+  color: #d63031;
+}
+
+.status-campaigning {
+  background: #74b9ff;
+  color: #0984e3;
+}
+
+.status-voting {
+  background: #55efc4;
+  color: #00b894;
+}
+
+.status-completed {
+  background: #dfe6e9;
+  color: #636e72;
+}
+
+.candidate-count {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin: 0.25rem 0;
+}
+
+.voting-closes {
+  font-size: 0.85rem;
+  color: #e74c3c;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
+
+/* Election Details */
+.election-details {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.election-details h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #2980b9;
+}
+
+/* Candidates Section */
+.candidates-section {
+  margin-top: 2rem;
+}
+
+.candidates-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.candidate-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid #dee2e6;
+}
+
+.candidate-info h4 {
+  font-size: 1.2rem;
+  margin: 0 0 0.75rem 0;
+  color: #2c3e50;
+}
+
+.platform {
+  margin: 0.5rem 0;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.candidate-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.candidate-stats span {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.ideology {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 4px;
+}
+
+.ideology span {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.75rem;
+  background: #e9ecef;
+  border-radius: 4px;
+  color: #495057;
+}
+
+.candidate-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-vote {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-vote:hover {
+  background: #229954;
+}
+
+.btn-donate {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-donate:hover {
+  background: #e67e22;
+}
+
+.btn-endorse {
+  background: #9b59b6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-endorse:hover {
+  background: #8e44ad;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #e8f5e9;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.results-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2e7d32;
+}
+
+.turnout {
+  font-size: 1.1rem;
+  color: #558b2f;
+  margin-bottom: 1rem;
+}
+
+/* Past Elections */
+.past-elections {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.past-elections h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.past-election-card {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.past-election-card h4 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.past-election-card p {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.modal-content label {
+  display: block;
+  margin: 1.5rem 0;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.modal-content textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  resize: vertical;
+}
+
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .elections-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .past-elections {
+    margin-top: 2rem;
+  }
+}

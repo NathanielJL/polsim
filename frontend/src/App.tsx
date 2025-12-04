@@ -3,11 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useAuth } from "./hooks/useAuth";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
+import TestPage from "./pages/TestPage";
 import MarketsPage from "./pages/MarketsPage";
 import NewsPage from "./pages/NewsPage";
 import GovernmentPage from "./pages/GovernmentPage";
 import ReputationPage from "./pages/ReputationPage";
 import GameMasterDashboard from "./pages/GameMasterDashboard";
+import ElectionsPage from "./pages/ElectionsPage";
+import BusinessPage from "./pages/BusinessPage";
+import LegalPage from "./pages/LegalPage";
 import "./App.css";
 
 // Protected route wrapper
@@ -36,6 +40,9 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          {/* Test route - bypass everything */}
+          <Route path="/test" element={<TestPage />} />
+          
           {/* Auth route */}
           <Route
             path="/auth"
@@ -88,6 +95,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <GameMasterDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/elections"
+            element={
+              <ProtectedRoute>
+                <ElectionsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business"
+            element={
+              <ProtectedRoute>
+                <BusinessPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/legal"
+            element={
+              <ProtectedRoute>
+                <LegalPage />
               </ProtectedRoute>
             }
           />
