@@ -26,7 +26,7 @@ router.post('/found', authMiddleware, async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Already own a company' });
     }
     
-    const cost = initialCapital || 10000;
+    const cost = initialCapital || 500;
     
     if (player.cash < cost) {
       return res.status(400).json({ error: 'Insufficient funds' });
@@ -57,6 +57,13 @@ router.post('/found', authMiddleware, async (req: Request, res: Response) => {
       employees: 1, // Just the owner
       marketInfluence: new Map(),
       monthlyProfit: 0,
+      valuation: cost, // Initial valuation = starting capital
+      totalShares: 10000,
+      shareholders: [{
+        playerId: playerId,
+        shares: 10000 // Founder gets 100% ownership
+      }],
+      profitHistory: [],
     });
     
     // Link to player
@@ -121,7 +128,7 @@ router.post('/hire', authMiddleware, async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Company not found' });
     }
     
-    const costPerEmployee = 1000; // Hiring cost
+    const costPerEmployee = 70; // Hiring cost
     const totalCost = costPerEmployee * count;
     
     if (company.cash < totalCost) {

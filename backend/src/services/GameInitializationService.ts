@@ -199,14 +199,98 @@ export class GameInitializationService {
   }
 
   /**
-   * Get active session for a player (legacy support for single player sessions)
+   * Get or create the global session (single continuous lobby for all players)
+   */
+  async getOrCreateGlobalSession(): Promise<any> {
+    try {
+      // Look for existing global session
+      let session = await models.Session.findOne({
+        name: 'Zealandia - Global Session',
+        status: 'active',
+      });
+
+      if (!session) {
+        // Create the global session (first player triggers this)
+        console.log('Creating global session for the first time...');
+        
+        // Create world
+        const world = await this.generateWorld();
+
+        // Create global session with system as GM
+        session = new models.Session({
+          name: 'Zealandia - Global Session',
+          gamemaster: null, // No GM - it's a continuous lobby
+          players: [],
+          status: 'active',
+          currentTurn: 1,
+          startedAt: new Date('1840-01-01'), // Game starts in 1840
+          turnStartTime: new Date(),
+          turnEndTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hour turns
+          autoAdvanceEnabled: true,
+          world: {
+            provinces: world.provinces,
+            markets: world.markets,
+            populationGroups: world.populationGroups,
+            companies: world.companies,
+          },
+        });
+
+        await session.save();
+
+        // Create provinces in database
+        for (const provinceData of world.provinces) {
+          const province = new models.Province({
+            sessionId: session._id,
+            name: provinceData.name,
+            population: provinceData.population,
+            governmentType: provinceData.governmentType,
+            laws: provinceData.laws,
+            markets: provinceData.markets,
+            approval: provinceData.approval,
+          });
+          await province.save();
+        }
+
+        // Initialize game state
+        const gameState = new models.GameState({
+          sessionId: session._id,
+          turn: 1,
+          economicIndex: 100,
+          socialStability: 100,
+          politicalStability: 100,
+          globalEvents: [],
+        });
+        await gameState.save();
+
+        // Initialize stock markets
+        await this.initializeStockMarkets(session._id, world.markets);
+
+        // Initialize market items
+        await this.initializeMarketItems(session._id, world.markets);
+
+        console.log('Global session created successfully');
+      }
+
+      return session;
+    } catch (error) {
+      console.error('Error getting/creating global session:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get active session for a player (uses player's sessionId field)
    */
   async getGameSession(playerId: string): Promise<any> {
     try {
-      const session = await models.Session.findOne({
-        players: playerId,
-        status: 'active',
-      })
+      // First get the player to find their sessionId
+      const player = await models.Player.findById(playerId);
+      if (!player || !player.sessionId) {
+        return null;
+      }
+
+      // Get the session by the player's sessionId
+      const session = await models.Session.findById(player.sessionId)
         .populate('gamemaster', 'username email')
         .populate('players', 'username email');
 

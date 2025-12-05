@@ -15,9 +15,9 @@ const router = Router();
 
 /**
  * POST /api/resources/explore
- * Explore a province for hidden resources (1 AP)
+ * Explore a province for hidden resources (2 AP + £400)
  */
-router.post('/explore', authMiddleware, requireActionPoints(1), async (req: Request, res: Response) => {
+router.post('/explore', authMiddleware, requireActionPoints(2), async (req: Request, res: Response) => {
   try {
     const { playerId, provinceId } = req.body;
     
@@ -25,6 +25,20 @@ router.post('/explore', authMiddleware, requireActionPoints(1), async (req: Requ
     if (!player) {
       return res.status(404).json({ error: 'Player not found' });
     }
+    
+    // Check if player has enough cash (£400)
+    const cost = 400;
+    if (player.cash < cost) {
+      return res.status(400).json({ 
+        error: 'Insufficient funds for exploration',
+        required: cost,
+        available: player.cash
+      });
+    }
+    
+    // Deduct exploration cost
+    player.cash -= cost;
+    await player.save();
     
     const province = await models.Province.findById(provinceId);
     if (!province) {

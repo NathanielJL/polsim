@@ -34,20 +34,41 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create player
+    // Get or create global session (single continuous lobby)
+    const { GameInitializationService } = await import('../services/GameInitializationService');
+    const gameInit = new GameInitializationService();
+    const globalSession = await gameInit.getOrCreateGlobalSession();
+
+    // Get random province from session
+    const provinces = await models.Province.find({ sessionId: globalSession._id });
+    const randomProvince = provinces[Math.floor(Math.random() * provinces.length)];
+
+    // Generate random AI portrait number (1-100)
+    const portraitNumber = Math.floor(Math.random() * 100) + 1;
+
+    // Create player with session and starting location
     const player = new models.Player({
       username,
       email,
       passwordHash: hashedPassword,
+      sessionId: globalSession._id,
+      currentProvinceId: randomProvince._id,
       ideologyPoint: {
         economic: 0,
         social: 0,
         personalFreedom: 0,
       },
       approval: {},
+      portraitUrl: `/ai-portraits/${portraitNumber}.png`, // AI-generated portrait
+      cash: 1000, // Starting cash
+      actionsRemaining: 5,
     });
 
     await player.save();
+
+    // Add player to session's player list
+    globalSession.players.push(player._id);
+    await globalSession.save();
 
     // Generate token
     const token = generateToken(player._id.toString(), username);
@@ -59,6 +80,7 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
         id: player._id,
         username: player.username,
         email: player.email,
+        isGameMaster: player.isGameMaster || false,
       },
     });
   } catch (error) {
@@ -108,6 +130,7 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
         id: player._id,
         username: player.username,
         email: player.email,
+        isGameMaster: player.isGameMaster || false,
       },
     });
   } catch (error) {
@@ -134,6 +157,7 @@ router.post('/verify', authMiddleware, async (req: AuthRequest, res: Response) =
         id: player._id,
         username: player.username,
         email: player.email,
+        isGameMaster: player.isGameMaster || false,
       },
     });
   } catch (error) {

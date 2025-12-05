@@ -122,6 +122,7 @@ const BusinessPage: React.FC = () => {
     const hireCount = parseInt(count);
     const cost = hireCount * 1000;
 
+    // eslint-disable-next-line no-restricted-globals
     if (!confirm(`Hire ${hireCount} employees for £${cost.toLocaleString()}?`)) return;
 
     try {
@@ -140,6 +141,7 @@ const BusinessPage: React.FC = () => {
   const closeCompany = async () => {
     if (!myCompany) return;
     
+    // eslint-disable-next-line no-restricted-globals
     if (!confirm(`Close ${myCompany.name}? Remaining cash will be returned to you.`)) return;
 
     try {

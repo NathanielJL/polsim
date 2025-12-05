@@ -1,0 +1,241 @@
+﻿Players start off with 1,000
+
+
+Overall Statistics
+* Grand Total Population: 97,284
+   * Indigenous Population: 75,820
+      * Male:Female Ratio: 13:10
+   * European Settler Population: 20600
+      * Male:Female Ratio: 70:30
+      * Rural:Urban Ratio: 85:15
+   * European-Indigenous Population: 863
+      * Male:Female Ratio: 21:20
+      * Rural:Urban Ratio: 85:15
+Economic Data
+* Total GDP: 8,971,952
+* GDP per capita: 418
+* Federal Debt: 0
+* Total Provincial Debt: 0
+* Number of Provinces: 7
+   * Class Structure: (*Allow GMs to make changes in future)
+      * 5% Upper Class: Landowners, Lawyers, Doctors, Industrialists: 500-1000
+      * 25% Middle Class: Merchants, Artisans, Teachers, Small Business Owners: 150-400+
+      * 65% Lower Class: Domestic Servants, Farmers, Laborers: 70-120
+Cultural Groups:
+* British Settlers
+* Dutch Settlers
+* Spanish Settlers
+* French Settlers
+* Maori Communities
+* Mixed-Heritage (Spanish + French; GMs will do events when other races begin to mix)
+
+
+
+
+
+
+
+
+Tasminata
+* Majority Crown-Owned Land. Pockets of Maori Tribes. One Porttown. One Fort/Port/Town. English Anglican. No Mixing.
+New Caledonia
+* Majority Crown-Owned Land. Pockets of Maori Tribes. One Manufacturing Commune town. Scottish Presbyterian. No Mixing.
+New Zealand
+* Some Crown-Owned Land. Congregations of Maori Tribes to North (between Auckland and Napier) & South. One City. Three Towns. English Methodists Missionaries. Trails between City and Towns. No Mixing.
+Vulteralia
+* Little Crown-Owned Land. Congregation of Maori Tribes towards New Caledonia border and South of Auckland. English Methodists Missionaries. European-Indigenous Mixes. Spanish & French Roman Catholics. One port city. Two Farming Towns. Two Porttowns. One Mining Town. Trails between English Cities and Towns.
+Cooksland
+* Half Crown-Owned Land. Maori Tribes to the East. One City. One MarketTown. English Anglicanism. Dutch Catholicism, Protestantism, Atheism. No Mixing.
+Southland
+* No Crown-Owned Land. Majority Maori Tribes. English Methodist Missionaries. One FarmTown. No Mixing. The Frontier.
+Orketers (*Change all instances of Orketers to “Te Moana-a-Toir,” including lore & constitution*)
+* No Crown-Owned Land. Majority Maori Tribes. Pockets of English Settlement. The Frontier. No Mixing.
+
+
+*Generate provincial + total population numeric values based on combination of factors: text above + biome/terrain + resources
+*Also generate class structure/occupation by biome & culture for provinces + total
+*Also generate cultural makeup from text above
+*Generate education levels: No School, Secondary School, Bachelors. Levels should be relevant to time and context. 
+
+
+Political Groups (*Regardless of ability to vote)
+* Political Scale
+   * Cube: (-10 to +10)
+      * X:  Economic Regulation - Laissez Faire
+      * Y: Totalitarian/Authoritarian - Anarchist
+      * Z: Progressive - Conservative
+* Issue Scale 
+   * * Sovereignty: National Sovereignty vs. Shared/Supranational Authority
+   *  * Property Rights: Absolute Private Property vs. Socially Responsible Property
+   *  * Taxes: Lower Taxes/Flat Tax vs. Progressive Taxes
+   *  * Protectionism: Tariffs/Domestic Priority vs. Free Trade/Open Borders
+   *  * Land Sales (NZ): Accelerated Land Acquisition vs. Cessation of Land Sales (Tuku Whenua)
+   *  * Kīngitanga (NZ): Challenge to Crown Authority vs. Māori Unity and Land Protection
+   *  * Responsible Government: Elected Parliament Rule vs. Governor/Imperial Authority
+   *  * Centralization/Decentralization: Strong Centralism vs. Strong Provincialism/Local Autonomy
+   *  * Property-Based Suffrage: Restricted Franchise vs. Universal/Expanded Franchise
+   *  * Eminent Domain: Public Good Acquisition vs. Private Property Protection
+   *  * Worker Rights: Employer Flexibility/Right-to-Work vs. Collective Bargaining/Union Strength
+   *  * Minimum Wage: Keep it Low/Market-Driven vs. Increase it/Living Wage
+   *  * Women’s Suffrage: Traditional Roles/Limited Franchise vs. Universal Suffrage
+   *  * Immigration: Strict Control/Restriction vs. Openness/Integration
+   *  * Economic Intervention: Free Market/Laissez-faire vs. Keynesian/Government Planning
+   *  * Welfare State: Limited State Intervention vs. Comprehensive Social Security
+   *  * Healthcare: Private/Market-Based System vs. Universal/Government System
+   *  * Education Rights: Local Control/Choice vs. Equity/Standardization
+   *  * Business Regulation: Deregulation vs. Increased Regulation
+   *  * Death Penalty: Retribution/Deterrence vs. Abolition/Human Rights
+   *  * Interventionism: Non-Intervention/Isolationism vs. Active Engagement/Intervention
+   *  * Indigenous Equal Rights: Assimilative Integration vs. Self-Determination/Treaty Rights
+   *  * Environmental Regulations: Economic Cost/Minimalism vs. Ecological Protection/Strong Limits
+   *  * Privatization: Market-Driven Efficiency vs. Public Control/Accountability
+   *  * Justice: Law and Order/Punitive vs. Rehabilitation/Restorative
+   *  * Animal Rights: Animal Welfare/Utility vs. Animal Liberation/Rights
+   *  * Productive Rights (Reproductive): Pro-Life vs. Pro-Choice
+   *  * Globalism: National Sovereignty First vs. Interdependence/Global Cooperation
+   *  * Privacy: Government Surveillance/National Security vs. Civil Liberties/Data Protection
+   *  * Police Reform: Increased Police Funding/Enforcement vs. Reallocation/Community-Based Safety
+   *  * Water Rights (NZ): Centralised/Economic Use vs. Indigenous/Ecological Authority
+   *  * Equity: Formal Equality of Opportunity vs. Equity of Outcome/Targeted Policy
+   *  * Universal Income: Work Requirement/Targeted Welfare vs. Guaranteed Basic Income (UBI)
+   *  * Gay Rights: Focus on Traditional Definition vs. Expansion of Civil Rights
+   *  * Trans Rights: Focus on Traditional Definition vs. Expansion of Civil Rights
+* Political factions
+   * Loyalty League
+      * leans laissez-faire/authoritarian/conservative
+   * Broader Reform
+      * leans economic-regulation/liberal/moderate
+   * Miscegenation Bloc
+      * leans economic-regulation/liberal/moderate
+* Political Parties
+   * Provincial (Player Made)
+
+
+*Political issues are the total sum, but in chronological order. Despite only White Male landowners being the only ones to vote, provide stances to other groups for when they’re unlocked. Do not let players see reputation with a population that cannot vote. White Male Landowners = 7% of Male Europeans
+*Political factions may evolve, decline, or new ones be made. Provide GMs tools to edit. Note: Will AI have to restructure.
+*Create annual population growth: positive. Events will modify negative if needed
+*Annual data on province & country updates every 12 turns, show metric for percent change (delete past data unused for metric)
+*Reputation data by population demographics updates every 3 turns, show metric for percent change (delete past data unused for metric)
+
+
+Political Scale Architecture 
+* Based on *Political Scale and Issue Scale
+* Political Cube
+   * Policy Position: Every bill/event will have an associated position (Xp​,Yp​,Zp​) on this cube.
+   * Initial NPC Positions: NPC positions are set based on their cultural group, class, and location (e.g., Dutch Settler Farmers in Cooksland will have a cluster of positions).
+* Beyond the cube, the system uses the 34 specific policy issues listed in the source material.
+   * Policy Position: Each specific issue (e.g., Women's Suffrage ) is a 1-dimensional scale, −10 (Traditional Roles) to +10 (Universal Suffrage). A proposed bill will have a score on relevant issues.
+   * Issue Salience: Each demographic group (e.g., Upper Class Doctors ) has an Issue Salience score for each of the 34 issues (0 to 1.0, sum of all 34 ≤ 10.0). A higher score means a group cares more about that issue, and it will magnify their reputation change from a policy.
+
+
+Reputation System Architecture 
+* With help of *Political Scale Architecture
+* Multi-Dimensional Demographic System
+   * Layer 1: Economic  * Occupation * Gender
+   * Layer 2: Culture * Religion
+   * Layer 3: Special Interest
+*Approval Calculation Formula
+Reputation (Approval) for a Player (P) with a specific Group (G) is a score from 0% to 100%.
+ΔApprovalP,G​=∑(Issue Match×Issue Salience×Issue Weight)+∑(Cube Match×Cube Weight)
+*Issue Match: Measures how closely the Player/Policy stance aligns with the Group's preferred stance on specific issues (higher salience means greater impact).
+*Cube Match: Measures the distance in the 3D cube between the Player/Policy position and the Group's default ideological position.
+* Reputation Assignment
+   * Proposer 
+   * YES Voters *including NPCs: 
+   * NO Voters *including NPCs:
+   * ABSTAIN Voters *including NPCs: 
+   * Outcome (*Economy System)
+   * Voter’s Reputation +/- for groups agreeing/disagreeing
+   * End of Turn
+* Reputation Impact
+   * *Policy + Political Scale Architecture
+Campaign System
+* Mechanics
+* Campaign Cost per target: 1 Action Point + 100 (no repeating (provincial) target group until duration ends)
+* Duration: 12 turns per campaign
+* Boost Amount: random (+1-5%)
+* No Diminishing return
+* No multiple targets in one campaign
+* Endorsement
+   * Players can endorse players
+   * Transfer Rate: 
+      * 0-39% -> (-7 to +1%)
+      * 40-59% -> (-5 to +5%)
+      * 60-100% -> (-1 to +7%)
+   * Cost: 1 Action Point, no Cost
+Economy System
+* Provincial
+   * Provincial Bills
+      * Modifies Provincial Values
+      * Modifies Provincial Modifiers
+   * Growth: *create
+* Federal (Collective Provincial)
+   * Federal Modifiers = Provincial Modifiers / 7
+   * Federal Bills
+      * Modifies Provincial Values *create formula
+      * Modifies Provincial Modifiers *create
+Party System
+* Roles
+   * Leader: + 3 Action Points
+      * Party Endorsement: *Endorsement Campaign System
+   * Second: + 2 Action Points
+* System
+   * Leaders are decided by players. Upon changes, players report to the GM, who switches position if needed. 
+   * Provincial Party
+      * Ability to support Political Faction
+         * +1% Reputation from agreeing population
+   * Generated NPC politicians can join parties 
+      * *Political Architecture System
+News System
+* GM’s upload an event for AI & Players.
+   * GM target all of Zealandia or specific province
+      * Economy system* for economic values
+   * 3 AI National Outlets
+      * Conservative
+      * Moderate
+      * Progressive
+      * AI Articles
+         * -5 to +5% from related population ideology
+   * Players can create 1 or join 1 PLAYER DRIVEN (provincial) outlet
+      * Players submit articles
+         * Players endorse/smear players/npcs
+            * -5 to +5% from provincial population
+      * Provide reader demographics
+Policy System
+* Players propose bills (province & federal) 
+* Reputation
+   * Reputation Assignment*
+* Economy
+   * Economy System*
+Voting System
+* Governor
+   * Popular Vote = All province voter population
+      * Player Population + population
+         * Player Endorsements = Campaign System*
+         * 1 Player Vote Weight = 1 person (population)
+* Upper House
+   * Seats: 14 (2 per province)
+   * For Life or Resignation
+      * *Current NPC seats can be kicked out in beginning
+      * *Can be reformed if specified
+* Lower House
+   * Seats: 35 (proportional to province population
+   * Population:Seat (per Province) Ratio: 601:1
+   * Party Popular Vote
+      * Vote for Party
+         * Party assigns  seat to player or NPC
+         * NPCs vote accordingly by *Political Scale Architecture
+* Provinces
+   * Superintendent * Appointed by Governor; can be reformed
+   * Provincial Counsel 
+      * Seats: *assign depending on individual provincial population
+      * Provincial Party Popular Vote
+         * Vote for Party
+            * Party assigns  seat to player or NPC
+            * NPCs vote accordingly by *Political Scale Architecture
+*Voting Population as of now: White Male Landowners = 7% of Male Europeans
+Turn System
+* Old Scandals forgotten (GM’s can make permanent). (Small) Reputation decay over time.
+* Reputation should affect business profitability (-5 to 5+)
+* Reputation should affect case difficulty
+* Reputation should gate loan amounts & interest rate

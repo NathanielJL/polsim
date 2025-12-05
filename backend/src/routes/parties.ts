@@ -64,6 +64,20 @@ router.post('/create', authMiddleware, requireActionPoints(1), async (req: Actio
     
     const player = req.player;
     
+    // Check if player has enough cash (£250)
+    const cost = 250;
+    if (player.cash < cost) {
+      return res.status(400).json({ 
+        error: 'Insufficient funds',
+        required: cost,
+        available: player.cash
+      });
+    }
+    
+    // Deduct cost
+    player.cash -= cost;
+    await player.save();
+    
     // Check if player already leads a party
     const existingParty = await models.Party.findOne({ 
       sessionId, 
@@ -170,7 +184,7 @@ router.post('/leave', authMiddleware, async (req: Request, res: Response) => {
 /**
  * POST /api/parties/fundraise
  * Party fundraising (leader only)
- * Cost: 1 AP, but grants +3 AP bonus to leader
+ * Cost: 1 AP, adds £50 to party fund
  */
 router.post('/fundraise', authMiddleware, requireActionPoints(1), async (req: ActionPointRequest, res: Response) => {
   try {
@@ -188,24 +202,130 @@ router.post('/fundraise', authMiddleware, requireActionPoints(1), async (req: Ac
     
     const player = req.player;
     
-    // Fundraising amount based on party size and faction
-    const baseFunds = 1000; // £1,000 base
-    const memberBonus = party.members.length * 100; // £100 per member
-    const totalRaised = baseFunds + memberBonus;
-    
-    party.treasury = (party.treasury || 0) + totalRaised;
+    // Add £50 to party fund
+    const fundsRaised = 50;
+    party.treasury = (party.treasury || 0) + fundsRaised;
     await party.save();
     
-    // Consume 1 AP, then grant +3 AP bonus
+    // Consume 1 AP
     await consumeActionPoints(player, 1);
-    await grantActionPoints(playerId, 3);
     
     res.json({ 
       success: true,
-      amountRaised: totalRaised,
+      amountRaised: fundsRaised,
       partyTreasury: party.treasury,
-      actionsRemaining: player.actionsRemaining + 3, // Show net result
-      message: `Raised £${totalRaised}. Party leader gains +3 AP bonus!`
+      actionsRemaining: player.actionsRemaining,
+      message: `Raised £${fundsRaised} for party fund!`
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/parties/party-campaign
+ * Party runs campaign for random 3 demographics
+ * Cost: 1 AP + £300 from party fund
+ */
+router.post('/party-campaign', authMiddleware, requireActionPoints(1), async (req: ActionPointRequest, res: Response) => {
+  try {
+    const { playerId, partyId } = req.body;
+    
+    const party = await models.Party.findOne({ id: partyId });
+    if (!party) {
+      return res.status(404).json({ error: 'Party not found' });
+    }
+    
+    // Must be party leader or second leader
+    const isLeader = party.leaderId?.toString() === playerId;
+    const isSecondLeader = party.secondLeaderId?.toString() === playerId;
+    
+    if (!isLeader && !isSecondLeader) {
+      return res.status(403).json({ error: 'Only party leaders can run party campaigns' });
+    }
+    
+    // Check party funds (£300)
+    if ((party.treasury || 0) < 300) {
+      return res.status(400).json({ 
+        error: 'Insufficient party funds',
+        required: 300,
+        available: party.treasury || 0
+      });
+    }
+    
+    // Deduct from party fund
+    party.treasury -= 300;
+    await party.save();
+    
+    // Select 3 random demographics
+    const { DemographicSliceModel } = await import('../models/ReputationModels');
+    const allDemographics = await DemographicSliceModel.find({});
+    
+    if (allDemographics.length === 0) {
+      return res.status(400).json({ error: 'No demographics found in database' });
+    }
+    
+    const randomDemographics = [];
+    const usedIndices = new Set();
+    
+    for (let i = 0; i < Math.min(3, allDemographics.length); i++) {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * allDemographics.length);
+      } while (usedIndices.has(randomIndex));
+      
+      usedIndices.add(randomIndex);
+      randomDemographics.push(allDemographics[randomIndex]);
+    }
+    
+    // Random duration 1-12 turns
+    const duration = Math.floor(Math.random() * 12) + 1;
+    
+    // Random boost 1-5%
+    const boost = Math.floor(Math.random() * 5) + 1;
+    
+    // Get current turn
+    const session = await models.Session.findById(party.sessionId);
+    const currentTurn = session?.currentTurn || 0;
+    
+    // Create 3 campaigns
+    const { Campaign } = await import('../models/ReputationModels');
+    const campaigns = [];
+    
+    for (const demographic of randomDemographics) {
+      const campaign = await Campaign.create({
+        playerId,
+        sessionId: party.sessionId,
+        targetDemographicId: demographic.id,
+        cost: 100,
+        duration,
+        boost,
+        startTurn: currentTurn,
+        endTurn: currentTurn + duration,
+        status: 'active',
+        source: 'party-campaign',
+        partyId: party._id
+      });
+      
+      campaigns.push({
+        demographic: `${demographic.locational.province} - ${demographic.economic.class} ${demographic.economic.occupation}`,
+        duration,
+        boost,
+        endTurn: currentTurn + duration
+      });
+    }
+    
+    const player = req.player;
+    await consumeActionPoints(player, 1);
+    
+    res.json({
+      success: true,
+      message: `Party campaign launched for 3 random demographics!`,
+      campaigns,
+      duration,
+      boost,
+      partyFundsRemaining: party.treasury,
+      actionsRemaining: player.actionsRemaining
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -214,7 +334,7 @@ router.post('/fundraise', authMiddleware, requireActionPoints(1), async (req: Ac
 
 /**
  * POST /api/parties/campaign
- * Party campaign for a candidate
+ * Individual campaign for a candidate
  * Cost: 1 AP, uses party treasury
  */
 router.post('/campaign', authMiddleware, requireActionPoints(1), async (req: ActionPointRequest, res: Response) => {

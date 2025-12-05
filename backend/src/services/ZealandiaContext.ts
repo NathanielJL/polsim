@@ -254,7 +254,7 @@ PROVINCES:
 - Tasminata: 3,730 pop, 5 seats, pastoral/whaling, high tensions, in debt crisis
 - New Zealand: 3,494 pop, 4 seats, government center, high tensions, capital Wellington
 - New Caledonia: 917 pop, 1 seat, whaling/timber, high tensions
-- Orketers: 218 pop, 0 seats, frontier, high tensions
+- Te Moana-a-Toir: 218 pop, 0 seats, frontier, high tensions
 
 FACTIONS:
 - Loyalty League (Conservative): Property rights, abolish bi-cultural rights, anti-immigration

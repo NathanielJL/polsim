@@ -21,6 +21,7 @@ export interface PlayerProfile {
   displayName?: string;
   overallApproval: number;
   approval: Record<string, number>;
+  isGameMaster?: boolean;
 }
 
 /**

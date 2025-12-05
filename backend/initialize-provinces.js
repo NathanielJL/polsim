@@ -217,7 +217,7 @@ async function initializeProvinces() {
           'Māori': 0.35,
           'Mixed': 0.15
         },
-        description: 'Isolated province. History of violence (Orketers Massacres 1828). Struggling economy. Needs development.'
+        description: 'Isolated province. History of violence (Te Moana-a-Toir Massacres 1828). Struggling economy. Needs development.'
       }
     ];
     

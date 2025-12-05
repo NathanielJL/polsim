@@ -9,6 +9,7 @@ import NewsPage from "./pages/NewsPage";
 import GovernmentPage from "./pages/GovernmentPage";
 import ReputationPage from "./pages/ReputationPage";
 import GameMasterDashboard from "./pages/GameMasterDashboard";
+import GMPortalPage from "./pages/GMPortalPage";
 import ElectionsPage from "./pages/ElectionsPage";
 import BusinessPage from "./pages/BusinessPage";
 import LegalPage from "./pages/LegalPage";
@@ -29,6 +30,25 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// GM-only route wrapper
+function GMRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, player, loading } = useAuth();
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!player?.isGameMaster) {
+    return <Navigate to="/gm-portal" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 function App() {
   const { isAuthenticated, loading } = useAuth();
 
@@ -40,9 +60,6 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* Test route - bypass everything */}
-          <Route path="/test" element={<TestPage />} />
-          
           {/* Auth route */}
           <Route
             path="/auth"
@@ -91,11 +108,19 @@ function App() {
             }
           />
           <Route
-            path="/gm-dashboard"
+            path="/gm-portal"
             element={
               <ProtectedRoute>
-                <GameMasterDashboard />
+                <GMPortalPage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gm-dashboard"
+            element={
+              <GMRoute>
+                <GameMasterDashboard />
+              </GMRoute>
             }
           />
           <Route

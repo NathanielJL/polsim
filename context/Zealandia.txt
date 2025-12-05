@@ -30,7 +30,7 @@ Legislature Structure:
 * Appointed vs. elected seats?
 * Term lengths?
 * Māori representation - separate seats or integrated?
-Bicameral, constitution will provide. 35 Lower House: 1 Seat per 815 people. Southland: 14; Vulteralia: 6; Cooksland: 5; Tasminata: 5; New Zealand: 4; New Caledonia: 1; Orketers: 0. Upper House: 14 (will be replaced by players, narrative event to bypass for life clause) No term lengths as of now. No Maori representation. 
+Bicameral, constitution will provide. 35 Lower House: 1 Seat per 815 people. Southland: 14; Vulteralia: 6; Cooksland: 5; Tasminata: 5; New Zealand: 4; New Caledonia: 1; Te Moana-a-Toir: 0. Upper House: 14 (will be replaced by players, narrative event to bypass for life clause) No term lengths as of now. No Maori representation. 
 2. ECONOMIC FOUNDATIONS
 Currency & Finance:
 * What currency is used? (British pounds sterling? Colonial pounds? Mix?)
@@ -98,7 +98,7 @@ Cultural Groups:
 * Exact breakdown of the 18 cultures - which cultures are in which provinces and at what population?
 * Cultural integration levels (isolated vs. mixed communities)?
 * Inter-cultural tensions or cooperation?
-Tasminata: English-Anglican, Moriri. New Caledonia: Scottish-Presbyterian, Morir. New Zealand: English-Anglican, English-Methodist, Maori, Highlanders. Vulteralia: English-Anglican, English-Methodist, Spanish-Catholic, French-Catholic, Spanish-Maori, French-Maori, Moriri, French-Highlander, Highlander. Cooksland: English-Anglican, Maori, Dutch-Catholic, Dutch-Protestantism. Orketers: English-Methodist, Maori. Southland: Maori, English-Methodist (Determine population yourself/system) (Cultural map refers to biggest group in cell, expect little groups of x or syncretic groups too). Vulteralia: high mixed communities. Every where else: low mixed/isolated. Intercultural tensions in every province except Cooksland and Vulteralia. Add to population demographic dashboard.
+Tasminata: English-Anglican, Moriri. New Caledonia: Scottish-Presbyterian, Morir. New Zealand: English-Anglican, English-Methodist, Maori, Highlanders. Vulteralia: English-Anglican, English-Methodist, Spanish-Catholic, French-Catholic, Spanish-Maori, French-Maori, Moriri, French-Highlander, Highlander. Cooksland: English-Anglican, Maori, Dutch-Catholic, Dutch-Protestantism. Te Moana-a-Toir: English-Methodist, Maori. Southland: Maori, English-Methodist (Determine population yourself/system) (Cultural map refers to biggest group in cell, expect little groups of x or syncretic groups too). Vulteralia: high mixed communities. Every where else: low mixed/isolated. Intercultural tensions in every province except Cooksland and Vulteralia. Add to population demographic dashboard.
 Religious Groups:
 * Exact breakdown of the 21 religions - adherent numbers per province?
 * Church establishment - state-supported churches?

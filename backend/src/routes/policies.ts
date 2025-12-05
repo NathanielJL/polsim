@@ -12,6 +12,8 @@ import {
   consumeActionPoints,
   ActionPointRequest 
 } from '../middleware/actionPoints';
+import PolicySupersessionService from '../services/PolicySupersessionService';
+import { PolicyReputationService } from '../services/PolicyReputationService';
 
 const router = Router();
 const aiService = new AIService();
@@ -20,9 +22,9 @@ const aiService = new AIService();
  * POST /api/policies/submit
  * Submit a policy proposal in natural language
  * AI will extract structured data and calculate impacts
- * Cost: 1 AP
+ * Cost: FREE (0 AP)
  */
-router.post('/submit', authMiddleware, requireActionPoints(1), async (req: ActionPointRequest, res: Response) => {
+router.post('/submit', authMiddleware, async (req: Request, res: Response) => {
   try {
     const { playerId, sessionId, title, description } = req.body;
     
@@ -157,12 +159,13 @@ router.post('/:policyId/vote', authMiddleware, async (req: Request, res: Respons
       return res.status(400).json({ error: 'Invalid vote type' });
     }
     
-    const policy = await models.Policy.findById(policyId);
+    const policy: any = await models.Policy.findById(policyId);
     if (!policy) {
       return res.status(404).json({ error: 'Policy not found' });
     }
     
-    if (policy.status !== 'pending') {
+    // Check if policy is voteable (using 'proposed' status)
+    if (policy.status !== 'proposed') {
       return res.status(400).json({ error: 'Policy voting is closed' });
     }
     
@@ -185,9 +188,39 @@ router.post('/:policyId/vote', authMiddleware, async (req: Request, res: Respons
     
     await policy.save();
     
+    // Apply reputation impacts for the vote (if not abstaining)
+    // Note: This applies immediate impacts. Full impacts applied when policy is enacted.
+    let reputationImpactsApplied = 0;
+    if (vote !== 'abstain') {
+      const player: any = await models.Player.findById(playerId);
+      
+      if (player) {
+        // Convert AI analysis to policy position
+        const policyPosition = PolicyReputationService.convertAIPolicyToPolicyPosition(
+          policy.aiAnalysis || {}
+        );
+        
+        // Get current turn
+        const session = await models.Session.findById(player.sessionId);
+        const currentTurn = session?.currentTurn || 0;
+        
+        // Apply reputation impacts for this vote
+        const role = vote === 'yes' ? 'yes-voter' : 'no-voter';
+        const impacts = await PolicyReputationService.applyPolicyReputationImpacts(
+          policyId,
+          policyPosition,
+          player.sessionId.toString(),
+          currentTurn
+        );
+        
+        reputationImpactsApplied = vote === 'yes' ? impacts.yesVoterImpacts : impacts.noVoterImpacts;
+      }
+    }
+    
     res.json({ 
       success: true,
-      votes: policy.votes 
+      votes: policy.votes,
+      reputationImpactsApplied
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -203,7 +236,7 @@ router.post('/:policyId/sponsor', authMiddleware, async (req: Request, res: Resp
     const { policyId } = req.params;
     const { playerId } = req.body;
     
-    const policy = await models.Policy.findById(policyId);
+    const policy: any = await models.Policy.findById(policyId);
     if (!policy) {
       return res.status(404).json({ error: 'Policy not found' });
     }
@@ -236,12 +269,13 @@ router.post('/:policyId/enact', authMiddleware, async (req: Request, res: Respon
   try {
     const { policyId } = req.params;
     
-    const policy = await models.Policy.findById(policyId);
+    const policy: any = await models.Policy.findById(policyId);
     if (!policy) {
       return res.status(404).json({ error: 'Policy not found' });
     }
     
-    if (policy.status !== 'pending') {
+    // Check if policy is voteable (using 'proposed' status)
+    if (policy.status !== 'proposed') {
       return res.status(400).json({ error: 'Policy already processed' });
     }
     
@@ -250,7 +284,7 @@ router.post('/:policyId/enact', authMiddleware, async (req: Request, res: Respon
     const yesPercentage = totalVotes > 0 ? (policy.votes?.yes || 0) / totalVotes : 0;
     
     if (yesPercentage < 0.5) {
-      policy.status = 'rejected';
+      policy.status = 'repealed'; // Using 'repealed' for rejected policies
       await policy.save();
       return res.json({ success: false, message: 'Policy did not pass' });
     }
@@ -261,40 +295,147 @@ router.post('/:policyId/enact', authMiddleware, async (req: Request, res: Respon
       for (const provinceId of policy.affectedProvinces || []) {
         const province = await models.Province.findById(provinceId);
         if (province && policy.economicImpact.gdpChange) {
-          province.gdp = (province.gdp || 0) * (1 + policy.economicImpact.gdpChange);
+          (province as any).gdp = ((province as any).gdp || 0) * (1 + policy.economicImpact.gdpChange);
           await province.save();
         }
       }
     }
     
-    if (policy.reputationImpact) {
-      // Apply reputation changes to proposer
-      const proposer = await models.Player.findById(policy.proposedBy);
-      if (proposer) {
-        for (const [group, change] of Object.entries(policy.reputationImpact)) {
-          if (!proposer.reputation) proposer.reputation = {};
-          proposer.reputation[group] = (proposer.reputation[group] || 50) + (change as number);
-        }
-        await proposer.save();
-      }
-    }
+    // Apply comprehensive reputation impacts (proposer gets full impact on enactment)
+    const policyPosition = PolicyReputationService.convertAIPolicyToPolicyPosition(
+      policy.aiAnalysis || {}
+    );
+    
+    const session = await models.Session.findById((policy as any).sessionId);
+    const currentTurn = session?.currentTurn || 0;
+    
+    // Apply proposer reputation impacts (highest weight)
+    const proposerImpacts = await PolicyReputationService.applyPolicyReputationImpacts(
+      policy._id.toString(),
+      policyPosition,
+      (policy as any).sessionId.toString(),
+      currentTurn
+    );
     
     if (policy.resourcePriceChanges) {
       // Apply resource price changes
       // TODO: Update market prices in Session model
     }
     
-    policy.status = 'enacted';
+    policy.status = 'active'; // Using 'active' for enacted policies
     policy.enactedAt = new Date();
     await policy.save();
     
+    // Check for policy supersession
+    const supersessionResult = await PolicySupersessionService.checkSupersession(
+      policy._id.toString(),
+      (policy as any).sessionId.toString()
+    );
+    
     res.json({ 
-      success: true,
+      success: true, 
       message: 'Policy enacted successfully',
+      supersession: supersessionResult,
       effects: {
         economic: policy.economicImpact,
-        reputation: policy.reputationImpact,
+        reputation: {
+          oldSystem: policy.reputationImpact, // AI-estimated (legacy)
+          newSystem: {
+            proposerImpacts: proposerImpacts.proposerImpacts,
+            yesVoterImpacts: proposerImpacts.yesVoterImpacts,
+            noVoterImpacts: proposerImpacts.noVoterImpacts
+          }
+        },
         resources: policy.resourcePriceChanges,
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/policies/active-modifiers/:sessionId
+ * Get all currently active policy modifiers by category
+ */
+router.get('/active-modifiers/:sessionId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params;
+    
+    const modifiers = await PolicySupersessionService.getActiveModifiers(sessionId);
+    
+    res.json({ 
+      modifiers,
+      message: 'Active policy modifiers (superseded policies excluded)'
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/policies/supersession-history/:policyId
+ * Get supersession chain for a policy
+ */
+router.get('/supersession-history/:policyId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { policyId } = req.params;
+    
+    const history = await PolicySupersessionService.getSupersessionHistory(policyId);
+    
+    res.json(history);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/policies/:policyId/predict-impact
+ * Predict reputation impacts of voting on a policy
+ * Shows player what will happen to their reputation with top demographics
+ */
+router.post('/:policyId/predict-impact', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { policyId } = req.params;
+    const { playerId, voteChoice } = req.body; // voteChoice: 'yes' | 'no' | 'abstain'
+    
+    if (!['yes', 'no', 'abstain'].includes(voteChoice)) {
+      return res.status(400).json({ error: 'Invalid vote choice' });
+    }
+    
+    const policy: any = await models.Policy.findById(policyId);
+    if (!policy) {
+      return res.status(404).json({ error: 'Policy not found' });
+    }
+    
+    // Abstain has no reputation impact
+    if (voteChoice === 'abstain') {
+      return res.json({ 
+        predictions: [],
+        message: 'Abstaining has no reputation impact'
+      });
+    }
+    
+    // Convert AI analysis to policy position
+    const policyPosition = PolicyReputationService.convertAIPolicyToPolicyPosition(
+      policy.aiAnalysis || {}
+    );
+    
+    // Get predicted impacts for the chosen vote
+    const role = voteChoice === 'yes' ? 'yes-voter' : 'no-voter';
+    const predictions = await PolicyReputationService.predictPolicyImpacts(
+      playerId,
+      policyPosition,
+      role
+    );
+    
+    res.json({ 
+      predictions,
+      summary: {
+        positiveImpacts: predictions.filter(p => p.predictedImpact > 0).length,
+        negativeImpacts: predictions.filter(p => p.predictedImpact < 0).length,
+        neutralImpacts: predictions.filter(p => p.predictedImpact === 0).length,
+        totalPopulationShown: predictions.reduce((sum, p) => sum + p.demographic.population, 0)
       }
     });
   } catch (error: any) {

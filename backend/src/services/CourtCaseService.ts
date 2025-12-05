@@ -108,7 +108,7 @@ export class CourtCaseService {
     caseId: string,
     lawyerId: string,
     strategy: string,
-    arguments: string
+    legalArguments: string
   ): Promise<any> {
     try {
       const courtCase = await models.CourtCase.findById(caseId);
@@ -140,18 +140,31 @@ export class CourtCaseService {
         }
       }
       
-      // Calculate reward based on difficulty
-      const baseReward = courtCase.rewardRange?.min || 50;
-      const maxReward = courtCase.rewardRange?.max || 500;
+      // Calculate reward based on difficulty and anti-farming
+      const baseReward = courtCase.rewardRange?.min || 20;  // Reduced from 50
+      const maxReward = courtCase.rewardRange?.max || 120;  // Reduced from 500
+      
+      // Anti-farming: check recent case count
+      const recentCases = await models.CourtCase.find({
+        assignedLawyerId: lawyerId,
+        resolvedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } // Last 7 days
+      });
+      
+      let rewardMultiplier = 1.0;
+      if (recentCases.length > 5) {
+        // Diminishing returns after 5 cases per week
+        rewardMultiplier = 0.5;
+      }
+      
       const reward = Math.floor(
-        baseReward + (maxReward - baseReward) * Math.random()
+        (baseReward + (maxReward - baseReward) * Math.random()) * rewardMultiplier
       );
       
       // Update case
       courtCase.status = 'resolved';
       courtCase.outcome = selectedOutcome.outcome;
       courtCase.lawyerStrategy = strategy;
-      courtCase.lawyerArguments = arguments;
+      courtCase.lawyerArguments = legalArguments;
       courtCase.reward = reward;
       courtCase.reputationChange = selectedOutcome.reputationImpact;
       courtCase.resolvedAt = new Date();

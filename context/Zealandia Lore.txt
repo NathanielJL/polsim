@@ -1,10 +1,10 @@
 
 
-¦ - The Founding of Zealandia: A History of Contested Shores (Pre-1852)
+ï¿½ - The Founding of Zealandia: A History of Contested Shores (Pre-1852)
 
 
 
-,• The Age of First Peoples: Pre-Colonial Zealandia
+,ï¿½ The Age of First Peoples: Pre-Colonial Zealandia
 Long before European sails appeared on the horizon, Zealandia was home to the great Polynesian navigators. The ancestors of today's indigenous peoples arrived between 800 and 1000 years ago, crossing the Pacific in vast waka canoes.
 
 They adapted to the diverse landscapes with remarkable ingenuity:
@@ -24,7 +24,7 @@ Meanwhile, the British-already entrenched in Australia-saw Zealandia as a strate
 
 
 
-¦t The Iberian and Gallic Era (1700s-Early 1800s)
+ï¿½t The Iberian and Gallic Era (1700s-Early 1800s)
 
 The 18th century brought Catholic powers into Zealandia.
 
@@ -35,7 +35,7 @@ Both settlements became centers of Catholic evangelism. The French, however, lef
 
 
 
- • , .   The Weaponry Revolution (Late 18th Century)
+ ï¿½ , .   The Weaponry Revolution (Late 18th Century)
 The destabilizing force was not settlement itself, but trade. Indigenous tribes gained access to muskets, gunpowder, and other European goods through the Catholic ports of Puerto Santiago (Spanish) and Port Louis (French), as well as from British and American whalers operating around Fort Chalmers.
 
 * Inter-Tribal Musket Wars: Firearms transformed existing rivalries into devastating wars. Tribes with early access to muskets quickly dominated their neighbors, seizing fertile valleys and trade routes.
@@ -44,14 +44,14 @@ The destabilizing force was not settlement itself, but trade. Indigenous tribes 
 
 
 
-?• The British Ascendancy
+?ï¿½ The British Ascendancy
 The Global Ascendancy Conflict (1803-1815), echoing the Napoleonic Wars, reshaped Zealandia. British naval supremacy forced Spain and France to cede their enclaves in 1815, handing Britain control of key northern ports.
 
 By 1820, the Dutch surrendered Tasmanstad after economic blockade and naval pressure.
 
 
 
-•a.I...?_\ Settlement and Infrastructure
+ï¿½a.I...?_\ Settlement and Infrastructure
 With rival powers expelled, Britain consolidated its hold:
 
 * Cook's Landing was claimed by James Cook in 1822, anchoring British authority in Cooksland.
@@ -63,10 +63,10 @@ Colonial trails-often following indigenous footpaths-linked Auckland, Wellington
 
 
  ,J._ The Southland Skirmishes (1825-1835)
-The first serious land conflicts erupted in Southland and Orketers.
+The first serious land conflicts erupted in Southland and Te Moana-a-Toir.
 
 * Pastoral Expansion: Settlers from Fort Chalmers pushed inland to establish sheep and cattle runs, directly encroaching on indigenous hunting and cultivation lands.
-* The Orketers Massacres (1828): Brutal confrontations erupted in the fertile valleys near the Orketers island chain. Settlers-often ex-soldiers from the Australian garrison- adopted ruthless expansionist tactics. Indigenous groups retaliated with raids, sparking cycles of violence.
+* The Te Moana-a-Toir Massacres (1828): Brutal confrontations erupted in the fertile valleys near the Te Moana-a-Toir island chain. Settlers-often ex-soldiers from the Australian garrison- adopted ruthless expansionist tactics. Indigenous groups retaliated with raids, sparking cycles of violence.
 * Though temporarily checked by the Governor's forces, the massacres left a legacy of mistrust and hatred that scarred the southern provinces.
 
 
@@ -91,18 +91,18 @@ The most organized and widespread conflicts occurred in the years immediately pr
 
 
  ,J._ Towards Unification (1852)
-By the early 1850s, Zealandia's seven provinces-Vulteralia, Tasminata, New Caledonia, New Zealand, Cooksland, Southland, and Orketers-were bound by trade, conflict, and shared vulnerability.
+By the early 1850s, Zealandia's seven provinces-Vulteralia, Tasminata, New Caledonia, New Zealand, Cooksland, Southland, and Te Moana-a-Toir-were bound by trade, conflict, and shared vulnerability.
 
 Inspired by Australia's self-governance, Zealandia's leaders ratified the First Constitution in 1852, transforming scattered colonial outposts into the Dominion of Zealandia.
 
 
 
- ·..a,fl'• The Zealandia Crisis: 1852-1854
+ ï¿½..a,fl'ï¿½ The Zealandia Crisis: 1852-1854
 The passing of the Constitution Act of Zealandia, 1852 was celebrated by colonial elites as the dawn of self-governance. Yet within two years, the Act's contradictions and imbalances fractured the Dominion, plunging it into turmoil. This volatile period, remembered as The Two Years' Dissolution, marks the beginning of the simulation.
 
 
 
-...A ,1\\ .... · The Constitutional Flaws Emerge
+...A ,1\\ .... ï¿½ The Constitutional Flaws Emerge
 The new Dominion was built on shaky foundations. Power was centralized in Auckland, while the provinces were left financially dependent, forced to fund roads, schools, and police through meager local rates and limited land sales.
 
 1. The Provincial Debt Crisis (1853)
@@ -124,7 +124,7 @@ Miscegenation Bloc.
 
 
 
-¦iTli =: The Crisis of Responsible Government (1854)
+ï¿½iTli =: The Crisis of Responsible Government (1854)
 The Constitution delayed the shift to full Responsible Government until after 1854, leaving the Governor and the appointed Legislative Council as gatekeepers of power.
 
 1. The Land Sale Imbroglio

@@ -187,9 +187,9 @@ Once import succeeds, you should:
    ```
 
 2. **Expected results:**
-   - 7 provinces (New Caledonia, Tasminata, Vulteralia, New Zealand, Cooksland, Orketers, Southland)
+   - 7 provinces (New Caledonia, Tasminata, Vulteralia, New Zealand, Cooksland, Te Moana-a-Toir, Southland)
    - ~95,000 total population distributed
-   - GDP values ranging from £180k (Orketers) to £2.8M (Southland)
+   - GDP values ranging from £180k (Te Moana-a-Toir) to £2.8M (Southland)
    - Each province has resources (timber, agriculture, fishing, etc.)
 
 3. **Create AI players** for NPC provinces (optional)

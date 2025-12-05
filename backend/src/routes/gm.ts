@@ -5,18 +5,22 @@
 
 import { Router, Request, Response } from 'express';
 import { models } from '../models/mongoose';
-import { authMiddleware } from '../middleware/auth';
+import { authMiddleware, AuthRequest } from '../middleware/auth';
 import { AIService } from '../services/AIService';
+import PolicySupersessionService from '../services/PolicySupersessionService';
 
 const router = Router();
 const aiService = new AIService();
 
 /**
- * Middleware to check if user is GM
+ * Middleware to check if authenticated user is GM
  */
-const gmOnly = async (req: Request, res: Response, next: Function) => {
+const gmOnly = async (req: AuthRequest, res: Response, next: Function) => {
   try {
-    const player = await models.Player.findById(req.body.userId || req.query.userId);
+    if (!req.playerId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+    const player = await models.Player.findById(req.playerId);
     if (!player || !player.isGameMaster) {
       return res.status(403).json({ error: 'Game Master access required' });
     }
@@ -25,6 +29,146 @@ const gmOnly = async (req: Request, res: Response, next: Function) => {
     res.status(500).json({ error: 'Authorization check failed' });
   }
 };
+
+/**
+ * POST /api/gm/portal/request-access
+ * Request GM access (creates a pending request for admin approval)
+ */
+router.post('/portal/request-access', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.playerId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { reason } = req.body;
+
+    const player = await models.Player.findById(req.playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    if (player.isGameMaster) {
+      return res.status(400).json({ error: 'You already have GM access' });
+    }
+
+    // Store GM access request (you can create a separate model for this, or use events)
+    // For now, we'll log it and return success
+    console.log(`GM Access Request from ${player.username} (${player.id}): ${reason || 'No reason provided'}`);
+
+    res.json({ 
+      success: true, 
+      message: 'GM access request submitted. An administrator will review your request.' 
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/gm/portal/grant-access
+ * Grant GM access to a player (GM only - requires existing GM to grant)
+ */
+router.post('/portal/grant-access', authMiddleware, gmOnly, async (req: AuthRequest, res: Response) => {
+  try {
+    const { targetPlayerId } = req.body;
+
+    if (!targetPlayerId) {
+      return res.status(400).json({ error: 'targetPlayerId required' });
+    }
+
+    const targetPlayer = await models.Player.findById(targetPlayerId);
+    if (!targetPlayer) {
+      return res.status(404).json({ error: 'Target player not found' });
+    }
+
+    if (targetPlayer.isGameMaster) {
+      return res.status(400).json({ error: 'Player already has GM access' });
+    }
+
+    targetPlayer.isGameMaster = true;
+    await targetPlayer.save();
+
+    const granter = await models.Player.findById(req.playerId);
+    console.log(`GM access granted to ${targetPlayer.username} by ${granter?.username}`);
+
+    res.json({ 
+      success: true, 
+      message: `GM access granted to ${targetPlayer.username}`,
+      player: {
+        id: targetPlayer.id,
+        username: targetPlayer.username,
+        isGameMaster: targetPlayer.isGameMaster
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/gm/portal/revoke-access
+ * Revoke GM access from a player (GM only)
+ */
+router.post('/portal/revoke-access', authMiddleware, gmOnly, async (req: AuthRequest, res: Response) => {
+  try {
+    const { targetPlayerId } = req.body;
+
+    if (!targetPlayerId) {
+      return res.status(400).json({ error: 'targetPlayerId required' });
+    }
+
+    const targetPlayer = await models.Player.findById(targetPlayerId);
+    if (!targetPlayer) {
+      return res.status(404).json({ error: 'Target player not found' });
+    }
+
+    if (!targetPlayer.isGameMaster) {
+      return res.status(400).json({ error: 'Player does not have GM access' });
+    }
+
+    targetPlayer.isGameMaster = false;
+    await targetPlayer.save();
+
+    const revoker = await models.Player.findById(req.playerId);
+    console.log(`GM access revoked from ${targetPlayer.username} by ${revoker?.username}`);
+
+    res.json({ 
+      success: true, 
+      message: `GM access revoked from ${targetPlayer.username}`,
+      player: {
+        id: targetPlayer.id,
+        username: targetPlayer.username,
+        isGameMaster: targetPlayer.isGameMaster
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/gm/portal/check-access
+ * Check if current user has GM access
+ */
+router.get('/portal/check-access', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.playerId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const player = await models.Player.findById(req.playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    res.json({ 
+      hasAccess: player.isGameMaster || false,
+      username: player.username
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // =======================
 // PROVINCE MANAGEMENT
@@ -561,6 +705,33 @@ router.get('/stats/:sessionId', authMiddleware, gmOnly, async (req: Request, res
         resourceTotals
       }
     });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/gm/delete-policy-by-event
+ * GM deletes policy as consequence of event
+ * Policy data removed but historical record preserved
+ */
+router.post('/delete-policy-by-event', authMiddleware, gmOnly, async (req: Request, res: Response) => {
+  try {
+    const { policyId, eventId, reason } = req.body;
+    
+    if (!policyId || !eventId || !reason) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: policyId, eventId, reason' 
+      });
+    }
+    
+    const result = await PolicySupersessionService.deletePolicyByEvent(
+      policyId,
+      eventId,
+      reason
+    );
+    
+    res.json(result);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

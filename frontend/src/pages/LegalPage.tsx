@@ -67,7 +67,7 @@ const LegalPage: React.FC = () => {
   };
 
   const admitToBar = async () => {
-    if (!confirm('Become a lawyer? Cost: £5,000')) return;
+    if (!window.confirm('Become a lawyer? Cost: £5,000')) return;
 
     try {
       await api.post('/legal/admit-to-bar', {

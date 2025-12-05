@@ -10,14 +10,6 @@ export interface AuthRequest extends Request {
  * Middleware to verify JWT token and attach player info to request
  */
 export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction): void {
-  // DEV MODE: Bypass auth for testing
-  if (process.env.NODE_ENV === 'development' && process.env.DEV_MODE === 'true') {
-    req.playerId = 'dev-player-1';
-    req.username = 'devplayer';
-    next();
-    return;
-  }
-
   const authHeader = req.headers.authorization;
   const token = extractTokenFromHeader(authHeader);
 

@@ -29,6 +29,10 @@ import partyRoutes from "./routes/parties";
 import legislatureRoutes from "./routes/legislature";
 import resourceRoutes from "./routes/resources";
 import immigrationRoutes from "./routes/immigration";
+import archiveRoutes from "./routes/archive";
+import dataDictionaryRoutes from "./routes/data-dictionary";
+import campaignRoutes from "./routes/campaigns";
+import endorsementRoutes from "./routes/endorsements";
 import { TurnScheduler } from "./services/TurnScheduler";
 
 dotenv.config();
@@ -162,6 +166,18 @@ app.use("/api/resources", resourceRoutes);
 
 // Immigration system routes
 app.use("/api/immigration", immigrationRoutes);
+
+// Archive routes (GM manual tools)
+app.use("/api/archive", archiveRoutes);
+
+// Data dictionary (public reference for players)
+app.use("/api/data-dictionary", dataDictionaryRoutes);
+
+// Campaign system routes (reputation boosting)
+app.use("/api/campaigns", campaignRoutes);
+
+// Endorsement system routes (player-to-player transfers)
+app.use("/api/endorsements", endorsementRoutes);
 
 // Create or join game session
 app.post("/api/sessions", (req: Request, res: Response) => {

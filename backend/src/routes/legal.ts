@@ -6,6 +6,8 @@
 import { Router, Request, Response } from 'express';
 import { models } from '../models/mongoose';
 import { authMiddleware } from '../middleware/auth';
+import { requireActionPoints, consumeActionPoints } from '../middleware/actionPoints';
+import CourtCaseService from '../services/CourtCaseService';
 
 const router = Router();
 
@@ -119,9 +121,9 @@ router.get('/bar-exam-questions', authMiddleware, async (req: Request, res: Resp
         id: 3,
         question: 'Who has the power to propose legislation?',
         options: [
-          'A) Only the Prime Minister',
-          'B) Members of Parliament',
-          'C) The Monarch',
+          'A) Only the Governor',
+          'B) Members of the General Assembly',
+          'C) The Crown',
           'D) The Supreme Court'
         ],
         correctAnswer: 'B'
@@ -432,6 +434,74 @@ router.post('/specialize', authMiddleware, async (req: Request, res: Response) =
       licenses: player.professionalCredentials.licenses,
       newBalance: player.cash 
     });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/legal/cases/:lawyerId
+ * Get pending cases for a lawyer
+ */
+router.get('/cases/:lawyerId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { lawyerId } = req.params;
+    
+    const cases = await CourtCaseService.getPendingCases(lawyerId);
+    
+    res.json({ cases });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/legal/resolve-case
+ * Resolve a court case (1 AP)
+ */
+router.post('/resolve-case', authMiddleware, requireActionPoints(1), async (req: Request, res: Response) => {
+  try {
+    const { playerId, caseId, strategy, legalArguments } = req.body;
+    
+    const player = await models.Player.findById(playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    if (player.occupation !== 'Lawyer') {
+      return res.status(403).json({ error: 'Must be a lawyer to resolve cases' });
+    }
+    
+    const result = await CourtCaseService.resolveCase(
+      caseId,
+      playerId,
+      strategy,
+      legalArguments
+    );
+    
+    // Consume AP after successful resolution
+    await consumeActionPoints(player, 1);
+    
+    res.json(result);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/legal/case/:caseId
+ * Get detailed case information
+ */
+router.get('/case/:caseId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { caseId } = req.params;
+    
+    const courtCase = await models.CourtCase.findById(caseId);
+    if (!courtCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+    
+    res.json({ case: courtCase });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

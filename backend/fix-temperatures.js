@@ -24,7 +24,7 @@ const PROVINCE_TEMPS = {
   'Vulteralia': { base: 16, range: 5 },         // North Island temperate (11-21°C)
   'New Zealand': { base: 15, range: 6 },        // Central (9-21°C)
   'Cooksland': { base: 14, range: 6 },          // South Island north (8-20°C)
-  'Orketers': { base: 13, range: 7 },           // South Island (6-20°C)
+  'Te Moana-a-Toir': { base: 13, range: 7 },    // South Island (6-20°C)
   'Southland': { base: 12, range: 8 },          // Far south (4-20°C, alpine down to -10°C)
 };
 

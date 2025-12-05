@@ -23,20 +23,6 @@ export function useAuth(): UseAuthReturn {
   // Check if user is already logged in on mount
   useEffect(() => {
     const initializeAuth = async () => {
-      // DEV MODE: Bypass login for testing
-      if (process.env.REACT_APP_DEV_MODE === 'true') {
-        setPlayer({
-          id: 'dev-player-1',
-          username: 'devplayer',
-          email: 'dev@polsim.local',
-          ideologyPoint: { economic: 0, social: 0, personalFreedom: 0 },
-          approval: {},
-        });
-        setError(null);
-        setLoading(false);
-        return;
-      }
-
       if (api.isAuthenticated()) {
         try {
           const response = await api.verify();

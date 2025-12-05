@@ -1,190 +1,150 @@
 /**
- * HOME PAGE - Player Dashboard/Game Session Hub
+ * HOME PAGE - Map-Centric Game Interface
  * 
- * Central hub showing:
- * - Active game session or create new game
- * - Game world information
- * - Quick start guide
- * - Player statistics
+ * Main interface:
+ * - Central map of Zealandia
+ * - Player stats panel (right side, open/closable)
+ * - Game menus (left side)
+ * - Single continuous multiplayer lobby
  */
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useGameStore } from '../store/gameStore';
 import '../styles/HomePage.css';
 
 function HomePage() {
+  const navigate = useNavigate();
   const { player } = useAuth();
-  const { session, loading, error, loadCurrentSession, createNewSession, clearError } = useGameStore();
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [sessionName, setSessionName] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
+  const { session, loading, error, loadCurrentSession, clearError } = useGameStore();
+  const [statsOpen, setStatsOpen] = useState(true);
 
   useEffect(() => {
     loadCurrentSession();
   }, []);
 
-  const handleCreateSession = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!sessionName.trim()) return;
+  if (loading) {
+    return (
+      <div className="home-page loading-screen">
+        <div className="loading-content">
+          <h1>Loading Zealandia...</h1>
+          <p>Connecting to global session</p>
+        </div>
+      </div>
+    );
+  }
 
-    setIsCreating(true);
-    try {
-      await createNewSession(sessionName);
-      setSessionName('');
-      setShowCreateForm(false);
-    } finally {
-      setIsCreating(false);
-    }
-  };
+  if (error || !session) {
+    return (
+      <div className="home-page error-screen">
+        <div className="error-content">
+          <h1>Unable to Load Game</h1>
+          <p>{error || 'There was a problem connecting to the global game session.'}</p>
+          <div className="error-actions">
+            <button onClick={() => loadCurrentSession()} className="btn-primary">
+              Retry Connection
+            </button>
+            <button onClick={clearError} className="btn-secondary">
+              Dismiss
+            </button>
+          </div>
+          <div className="help-text">
+            <h3>First time here?</h3>
+            <p>This is a single continuous multiplayer lobby. No signup beyond registration is needed.</p>
+            <p>If you just registered, try refreshing the page.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="home-page">
-      <div className="home-container">
-        {/* Header */}
-        <div className="home-header">
-          <h1>POLSIM - Political Economy Simulator</h1>
-          <p>Welcome back, {player?.username}!</p>
+    <div className="home-page game-interface">
+      {/* Left Menu Bar */}
+      <div className="left-menu">
+        <div className="menu-header">
+          <h2>Zealandia</h2>
+          <p className="turn-info">Turn {session.currentTurn}</p>
         </div>
+        
+        <nav className="game-nav">
+          <button onClick={() => navigate('/government')} className="nav-btn">
+            <span className="icon">🏛️</span>
+            <span>Government</span>
+          </button>
+          <button onClick={() => navigate('/markets')} className="nav-btn">
+            <span className="icon">💰</span>
+            <span>Markets</span>
+          </button>
+          <button onClick={() => navigate('/business')} className="nav-btn">
+            <span className="icon">🏢</span>
+            <span>Business</span>
+          </button>
+          <button onClick={() => navigate('/news')} className="nav-btn">
+            <span className="icon">📰</span>
+            <span>News</span>
+          </button>
+          <button onClick={() => navigate('/legal')} className="nav-btn">
+            <span className="icon">⚖️</span>
+            <span>Legal</span>
+          </button>
+          <button onClick={() => navigate('/elections')} className="nav-btn">
+            <span className="icon">🗳️</span>
+            <span>Elections</span>
+          </button>
+        </nav>
+      </div>
 
-        {/* Game Status */}
-        {error && (
-          <div className="error-message">
-            {error}
-            <button onClick={clearError} className="close-btn">×</button>
-          </div>
-        )}
+      {/* Central Map */}
+      <div className="map-container">
+        <div className="map-placeholder">
+          <h2>Map of Zealandia</h2>
+          <p>Interactive map will be displayed here</p>
+          <p className="map-note">Click provinces to interact, manage resources, and view demographics</p>
+        </div>
+      </div>
 
-        {loading ? (
-          <div className="loading">Loading game session...</div>
-        ) : session ? (
-          <div className="game-status">
-            <div className="session-card">
-              <h2>{session.name}</h2>
-              <div className="session-info">
-                <div className="info-row">
-                  <span className="label">Current Turn:</span>
-                  <span className="value">{session.currentTurn}</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">World Provinces:</span>
-                  <span className="value">{session.world.numProvinces}</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Active Markets:</span>
-                  <span className="value">{session.world.numMarkets}</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Population Groups:</span>
-                  <span className="value">{session.world.numPopulationGroups}</span>
-                </div>
-                <div className="info-row">
-                  <span className="label">Turn Ends:</span>
-                  <span className="value">{new Date(session.turnEndTime).toLocaleString()}</span>
-                </div>
+      {/* Right Stats Panel */}
+      <div className={`right-panel ${statsOpen ? 'open' : 'closed'}`}>
+        <button 
+          className="panel-toggle"
+          onClick={() => setStatsOpen(!statsOpen)}
+          aria-label={statsOpen ? 'Close panel' : 'Open panel'}
+        >
+          {statsOpen ? '→' : '←'}
+        </button>
+        
+        {statsOpen && (
+          <div className="panel-content">
+            <div className="player-header">
+              <h3>{player?.username}</h3>
+              <p className="player-location">Location: Province Name</p>
+            </div>
+
+            <div className="player-stats">
+              <div className="stat-item">
+                <span className="label">Cash:</span>
+                <span className="value">£{player?.cash?.toLocaleString() || 0}</span>
               </div>
-              <div className="session-actions">
-                <button className="btn-primary">Continue Playing</button>
-                <button className="btn-secondary">View World</button>
-                <button className="btn-secondary">View Markets</button>
+              <div className="stat-item">
+                <span className="label">Reputation:</span>
+                <span className="value">{player?.reputation || 0}%</span>
+              </div>
+              <div className="stat-item">
+                <span className="label">Actions:</span>
+                <span className="value">{player?.actionsRemaining || 0} / 5</span>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="no-session">
-            <div className="empty-state">
-              <h2>No Active Game Session</h2>
-              <p>Create a new game to begin exploring the world of POLSIM.</p>
-              
-              {!showCreateForm ? (
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="btn-primary"
-                >
-                  Create New Game
-                </button>
-              ) : (
-                <form onSubmit={handleCreateSession} className="create-form">
-                  <div className="form-group">
-                    <label htmlFor="sessionName">Game Name</label>
-                    <input
-                      type="text"
-                      id="sessionName"
-                      value={sessionName}
-                      onChange={(e) => setSessionName(e.target.value)}
-                      placeholder="e.g., My First Game"
-                      required
-                      disabled={isCreating}
-                      autoFocus
-                    />
-                  </div>
-                  <div className="form-actions">
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                      disabled={isCreating || !sessionName.trim()}
-                    >
-                      {isCreating ? 'Creating...' : 'Create Game'}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => setShowCreateForm(false)}
-                      disabled={isCreating}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
+
+            <div className="session-info">
+              <h4>Global Session</h4>
+              <p><strong>{session.name}</strong></p>
+              <p>Turn ends: {new Date(session.turnEndTime).toLocaleTimeString()}</p>
+              <p>Players: {session.world.numPopulationGroups} active</p>
             </div>
           </div>
         )}
-
-        {/* Game Overview */}
-        <div className="game-overview">
-          <div className="overview-card">
-            <h3>Game Features</h3>
-            <ul>
-              <li>9 Political Archetypes with dynamic evolution</li>
-              <li>6 Major Markets with supply/demand dynamics</li>
-              <li>5 Provinces with independent governments</li>
-              <li>Real-time action queue system (5 actions/turn)</li>
-              <li>AI-driven event generation and news</li>
-              <li>Game Master tools for world management</li>
-            </ul>
-          </div>
-
-          <div className="overview-card">
-            <h3>Quick Start</h3>
-            <ol>
-              <li>Create a new game session</li>
-              <li>Explore the world and population groups</li>
-              <li>Build influence through actions</li>
-              <li>Trade in markets</li>
-              <li>Propose policies and laws</li>
-              <li>Watch your archetype evolve</li>
-            </ol>
-          </div>
-
-          <div className="overview-card">
-            <h3>Player Stats</h3>
-            <div className="stats">
-              <div className="stat">
-                <span className="stat-label">Overall Approval:</span>
-                <span className="stat-value">{player?.overallApproval || 0}%</span>
-              </div>
-              <div className="stat">
-                <span className="stat-label">Active Games:</span>
-                <span className="stat-value">{session ? 1 : 0}</span>
-              </div>
-              <div className="stat">
-                <span className="stat-label">Total Turns Played:</span>
-                <span className="stat-value">{session?.currentTurn || 0}</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

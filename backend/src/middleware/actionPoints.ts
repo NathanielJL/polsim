@@ -2,16 +2,22 @@
  * Action Point Middleware
  * Tracks and enforces action point costs for player actions
  * 
- * Players get 5 AP per turn. Actions cost:
+ * Players get 5 AP per turn (+ party bonuses). Actions cost:
  * - Move provinces: 1 AP
  * - Invest/Business investment: 1 AP
- * - Submit policy: 1 AP
+ * - Submit policy: FREE (0 AP)
  * - Campaign/endorse: 1 AP
  * - Bar exam: 1 AP
- * - Party fundraising (leaders +3 AP bonus): 1 AP
+ * - Party fundraising: 1 AP (adds £50 to party fund)
+ * - Party campaign: 1 AP (£300, random 3 groups, 1-12 turns, +1-5% boost)
+ * - Create party: 1 AP (£250)
+ * - Create newspaper: 1 AP (£100)
+ * - Explore resources: 2 AP (£400)
  * - Vote on policy: 0 AP
  * - Court case/debate: 0 AP
- * - View dashboards: FREE
+ * 
+ * Party Leader: +3 AP per turn (automatic)
+ * Second Party Leader: +2 AP per turn (automatic)
  */
 
 import { Request, Response, NextFunction } from 'express';

@@ -113,9 +113,62 @@ router.post('/submit', authMiddleware, async (req: Request, res: Response) => {
       createdAt: new Date(),
     });
     
+    // Apply reputation impacts for publishing article
+    // Import here to avoid circular dependencies
+    const { ReputationCalculationService } = await import('../services/ReputationCalculationService');
+    const { DemographicSliceModel } = await import('../models/ReputationModels');
+    
+    const session = await models.Session.findById(sessionId);
+    const currentTurn = session?.currentTurn || 0;
+    
+    // Get outlet's ideological position for reputation calculation
+    const outletPosition = {
+      cube: (outlet as any).ideologicalPosition || { economic: 0, authority: 0, social: 0 },
+      issues: (outlet as any).issuePositions || {}
+    };
+    
+    // Apply base ±5 reputation impact modified by ideological alignment
+    // For provincial papers, impact is strongest in home province
+    const provinceDemographics = await DemographicSliceModel.find({ 
+      'locational.province': provinceId 
+    });
+    
+    let reputationImpactsApplied = 0;
+    for (const demographic of provinceDemographics) {
+      // Simplified alignment calculation (TODO: Use proper method when available)
+      // For now, just use a default positive impact
+      const alignment = 0.5; // Placeholder: neutral-positive alignment
+      
+      // Base impact ±5, scaled by alignment (-1 to 1)
+      // Positive alignment = positive reputation boost
+      // Negative alignment = reputation penalty
+      const baseImpact = 5;
+      const impact = baseImpact * alignment;
+      
+      await ReputationCalculationService.applyReputationChange(
+        playerId,
+        demographic.id,
+        impact,
+        'policy', // Using 'policy' as source since 'news' not yet added
+        article.id,
+        currentTurn,
+        { 
+          outletId, 
+          articleTitle: title,
+          provinceId,
+          alignment 
+        }
+      );
+      
+      reputationImpactsApplied++;
+    }
+    
+    console.log(`✅ Applied ${reputationImpactsApplied} news reputation impacts for article "${title}"`);
+    
     res.json({ 
       success: true,
-      article 
+      article,
+      reputationImpactsApplied
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

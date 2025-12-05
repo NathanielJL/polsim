@@ -1,0 +1,578 @@
+.legislature-page {
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.legislature-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 2px solid #ffd700;
+}
+
+.legislature-header h1 {
+  margin: 0;
+  color: #ffd700;
+  font-size: 36px;
+  font-family: 'Georgia', serif;
+}
+
+.subtitle {
+  margin: 10px 0 0 0;
+  color: #cccccc;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.legislature-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.legislature-tabs button {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px 20px;
+  background: #2a2a2a;
+  border: 2px solid #555555;
+  color: #cccccc;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.legislature-tabs button:hover {
+  color: #ffffff;
+  border-color: #ffd700;
+}
+
+.legislature-tabs button.active {
+  color: #ffd700;
+  border-color: #ffd700;
+  background: #3a3a3a;
+}
+
+.legislature-content {
+  background: #2a2a2a;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #555555;
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-panel h2 {
+  margin-top: 0;
+  color: #ffd700;
+  font-size: 28px;
+  border-bottom: 2px solid #ffd700;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.house-description {
+  color: #cccccc;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #1a1a1a;
+  border-left: 4px solid #ffd700;
+  border-radius: 4px;
+}
+
+.seats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.seat-card {
+  background: #3a3a3a;
+  border: 1px solid #555555;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.seat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.seat-card.upper-house {
+  border-color: #9c27b0;
+}
+
+.seat-card.upper-house:hover {
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.seat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.seat-province {
+  color: #cccccc;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.seat-faction {
+  padding: 4px 12px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.seat-holder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seat-holder strong {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.seat-date {
+  color: #888888;
+  font-size: 13px;
+}
+
+.vacant {
+  color: #888888;
+  font-style: italic;
+}
+
+.executive-section {
+  margin-bottom: 40px;
+}
+
+.executive-section h3 {
+  color: #ffd700;
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #555555;
+  padding-bottom: 10px;
+}
+
+.executive-card {
+  background: #3a3a3a;
+  border: 2px solid #555555;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.executive-card.governor {
+  border-color: #ffd700;
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+}
+
+.executive-title {
+  color: #ffd700;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.executive-name {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.executive-description {
+  color: #cccccc;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.executive-date {
+  color: #888888;
+  font-size: 13px;
+}
+
+.superintendents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.bills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.bill-card {
+  background: #3a3a3a;
+  border: 1px solid #555555;
+  border-radius: 8px;
+  padding: 25px;
+  transition: transform 0.2s;
+}
+
+.bill-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(66, 135, 245, 0.3);
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.bill-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 22px;
+  flex: 1;
+}
+
+.bill-status {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bill-status.proposed {
+  background: #FF9800;
+  color: #000000;
+}
+
+.bill-status.voting {
+  background: #2196F3;
+  color: #ffffff;
+}
+
+.bill-status.passed {
+  background: #4CAF50;
+  color: #ffffff;
+}
+
+.bill-status.rejected {
+  background: #f44336;
+  color: #ffffff;
+}
+
+.bill-description {
+  color: #cccccc;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.bill-meta {
+  display: flex;
+  gap: 20px;
+  color: #888888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.bill-meta strong {
+  color: #ffffff;
+}
+
+.vote-progress {
+  margin-bottom: 20px;
+}
+
+.vote-bar {
+  display: flex;
+  height: 30px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.vote-segment {
+  transition: width 0.3s ease;
+}
+
+.vote-segment.yes {
+  background: #4CAF50;
+}
+
+.vote-segment.no {
+  background: #f44336;
+}
+
+.vote-counts {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.vote-count {
+  font-weight: bold;
+}
+
+.vote-count.yes {
+  color: #4CAF50;
+}
+
+.vote-count.no {
+  color: #f44336;
+}
+
+.vote-count.abstain {
+  color: #888888;
+}
+
+.vote-percentage {
+  margin-left: auto;
+  color: #cccccc;
+}
+
+.bill-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vote-button {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vote-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.vote-button.yes {
+  background: #4CAF50;
+  color: #ffffff;
+}
+
+.vote-button.no {
+  background: #f44336;
+  color: #ffffff;
+}
+
+.vote-button.abstain {
+  background: #888888;
+  color: #ffffff;
+}
+
+.details-button {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px;
+  background: #2196F3;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.details-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.empty-state {
+  text-align: center;
+  color: #888888;
+  padding: 60px 20px;
+  font-size: 18px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #2a2a2a;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 2px solid #ffd700;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  border-bottom: 2px solid #555555;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #ffd700;
+  font-size: 24px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 32px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #ff4444;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.modal-body p {
+  color: #cccccc;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.economic-impact {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 4px;
+  border-left: 4px solid #4CAF50;
+}
+
+.economic-impact h3 {
+  margin-top: 0;
+  color: #4CAF50;
+  font-size: 18px;
+}
+
+.economic-impact pre {
+  color: #cccccc;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+/* Loading state */
+.legislature-page.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.spinner {
+  border: 4px solid #3a3a3a;
+  border-top: 4px solid #ffd700;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error state */
+.legislature-page.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.legislature-page.error h2 {
+  color: #ff4444;
+  margin-bottom: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .legislature-header h1 {
+    font-size: 28px;
+  }
+
+  .seats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .superintendents-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legislature-tabs {
+    flex-direction: column;
+  }
+
+  .legislature-tabs button {
+    min-width: auto;
+  }
+
+  .bill-actions {
+    flex-direction: column;
+  }
+
+  .vote-button,
+  .details-button {
+    width: 100%;
+  }
+}

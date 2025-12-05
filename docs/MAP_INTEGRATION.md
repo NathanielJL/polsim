@@ -325,7 +325,7 @@ async aiGovernorTurn(aiPlayer) {
 | Vulteralia | ~19,000 | £2.3M | Agriculture |
 | New Zealand | ~14,000 | £1.8M | Livestock |
 | Cooksland | ~13,000 | £1.7M | Agriculture |
-| Orketers | ~2,000 | £180k | Fishing |
+| Te Moana-a-Toir | ~2,000 | £180k | Fishing |
 | Southland | ~21,000 | £2.8M | Livestock |
 
 **Total:** 95,000 population, ~£11.75M GDP
