@@ -283,16 +283,23 @@ export class GameInitializationService {
    */
   async getGameSession(playerId: string): Promise<any> {
     try {
+      console.log('🔍 Looking for session for player:', playerId);
+      
       // First get the player to find their sessionId
       const player = await models.Player.findById(playerId);
       if (!player || !player.sessionId) {
+        console.log('❌ Player not found or has no sessionId');
         return null;
       }
+
+      console.log('✓ Player found, sessionId:', player.sessionId);
 
       // Get the session by the player's sessionId
       const session = await models.Session.findById(player.sessionId)
         .populate('gamemaster', 'username email')
         .populate('players', 'username email');
+
+      console.log('✓ Session query result:', session ? session.name : 'NULL');
 
       return session;
     } catch (error) {
@@ -449,29 +456,6 @@ export class GameInitializationService {
     });
 
     return companies;
-  }
-
-  /**
-   * Get existing game session for player
-   */
-  async getGameSession(playerId: string, sessionId?: string): Promise<any> {
-    try {
-      if (sessionId) {
-        return await models.Session.findOne({
-          _id: sessionId,
-          playerId,
-          status: 'active',
-        });
-      }
-
-      return await models.Session.findOne({
-        playerId,
-        status: 'active',
-      });
-    } catch (error) {
-      console.error('Error fetching game session:', error);
-      throw error;
-    }
   }
 
   /**

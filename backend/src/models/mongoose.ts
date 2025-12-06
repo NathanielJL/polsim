@@ -47,6 +47,8 @@ const PlayerSchema = new Schema({
   reputation: { type: Number, default: 0 },
   reputationByGroup: { type: Map, of: Number, default: new Map() },
   portraitUrl: { type: String }, // AI-generated portrait path
+  ideologyPoint: IdeologyPointSchema, // Player's political position
+  approval: { type: Number, min: 0, max: 100, default: 50 }, // Public approval rating
   
   // Location & Office
   currentProvinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
@@ -351,7 +353,8 @@ export const NewsOutletModel = mongoose.model<NewsOutlet & Document>(
 const CellSchema = new Schema({
   azgaarId: { type: Number, required: true },
   sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
-  vertices: [Number], // For map rendering
+  vertices: [Number], // Vertex IDs from Azgaar
+  polygon: [[Number]], // Resolved [x,y] coordinates for rendering
   connections: [Number],
   position: { type: [Number], required: true }, // [x, y]
   height: { type: Number, required: true },

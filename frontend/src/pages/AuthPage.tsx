@@ -64,7 +64,7 @@ export function AuthPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>POLSIM</h1>
+          <h1>ZEALANDIA</h1>
           <p>Political Economy Simulator</p>
         </div>
 

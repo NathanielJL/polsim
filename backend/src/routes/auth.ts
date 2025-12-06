@@ -1,4 +1,5 @@
 import { Router, Response } from 'express';
+import mongoose from 'mongoose';
 import { models } from '../models/mongoose';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 import { AuthRequest, authMiddleware } from '../middleware/auth';
@@ -39,8 +40,18 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
     const gameInit = new GameInitializationService();
     const globalSession = await gameInit.getOrCreateGlobalSession();
 
-    // Get random province from session
-    const provinces = await models.Province.find({ sessionId: globalSession._id });
+    // Get random province - first try from session, then any province
+    let provinces = await models.Province.find({ sessionId: globalSession._id });
+    if (provinces.length === 0) {
+      // No provinces linked to this session, get any province
+      provinces = await models.Province.find({}).limit(10);
+    }
+    
+    if (provinces.length === 0) {
+      res.status(500).json({ error: 'No provinces available. Please contact administrator.' });
+      return;
+    }
+    
     const randomProvince = provinces[Math.floor(Math.random() * provinces.length)];
 
     // Generate random AI portrait number (1-100)
@@ -48,6 +59,7 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
 
     // Create player with session and starting location
     const player = new models.Player({
+      id: new mongoose.Types.ObjectId().toString(), // Generate unique string ID
       username,
       email,
       passwordHash: hashedPassword,
@@ -56,9 +68,8 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
       ideologyPoint: {
         economic: 0,
         social: 0,
-        personalFreedom: 0,
       },
-      approval: {},
+      approval: 50, // Default public approval
       portraitUrl: `/ai-portraits/${portraitNumber}.png`, // AI-generated portrait
       cash: 1000, // Starting cash
       actionsRemaining: 5,
@@ -96,9 +107,11 @@ router.post('/register', async (req: AuthRequest, res: Response) => {
 router.post('/login', async (req: AuthRequest, res: Response) => {
   try {
     const { username, password } = req.body;
+    console.log('🔵 Login attempt:', { username, hasPassword: !!password });
 
     // Validation
     if (!username || !password) {
+      console.log('❌ Login failed: Missing credentials');
       res.status(400).json({ error: 'Username and password are required' });
       return;
     }
@@ -109,19 +122,27 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     });
 
     if (!player) {
+      console.log('❌ Login failed: Player not found');
       res.status(401).json({ error: 'Invalid username or password' });
       return;
     }
+
+    console.log('✓ Player found:', player.username);
 
     // Check password
     const passwordMatch = await comparePassword(password, player.passwordHash);
     if (!passwordMatch) {
+      console.log('❌ Login failed: Invalid password');
       res.status(401).json({ error: 'Invalid username or password' });
       return;
     }
 
+    console.log('✓ Password verified');
+
     // Generate token
     const token = generateToken(player._id.toString(), player.username);
+
+    console.log('✅ Login successful for:', player.username);
 
     res.json({
       message: 'Login successful',

@@ -6,6 +6,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 // Load the data
 const sliceData = JSON.parse(

@@ -59,12 +59,16 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
  */
 router.get('/current', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
+    console.log('🔵 Getting current session for player:', req.playerId);
     const session = await gameInit.getGameSession(req.playerId!);
 
     if (!session) {
+      console.log('❌ No session found for player:', req.playerId);
       res.status(404).json({ error: 'No active game session found' });
       return;
     }
+
+    console.log('✅ Session found:', session.name);
 
     res.json({
       id: session._id,

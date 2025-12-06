@@ -374,6 +374,33 @@ class APIClient {
   getToken(): string | null {
     return this.token;
   }
+
+  /**
+   * Get all provinces for a session
+   */
+  async getProvinces(sessionId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/map/${sessionId}/provinces`);
+    return response.data.provinces || [];
+  }
+
+  /**
+   * Get all cells for map rendering
+   */
+  async getCells(sessionId: string): Promise<any[]> {
+    const response = await this.client.get(`/api/map/${sessionId}/cells`, {
+      headers: { 'Cache-Control': 'no-cache' },
+      params: { _t: Date.now() } // Cache buster
+    });
+    return response.data.cells || [];
+  }
+
+  /**
+   * Get province details including cells
+   */
+  async getProvinceDetails(sessionId: string, provinceId: string): Promise<any> {
+    const response = await this.client.get(`/api/map/${sessionId}/provinces/${provinceId}`);
+    return response.data;
+  }
 }
 
 // Export singleton instance
