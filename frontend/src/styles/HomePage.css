@@ -6,8 +6,8 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #1a1a2e;
-  color: white;
+  background: #36393f;
+  color: #dcddde;
 }
 
 /* Loading and Error Screens */
@@ -18,7 +18,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: #36393f;
 }
 
 .loading-content,
@@ -32,16 +32,13 @@
 .error-content h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
-  background: linear-gradient(45deg, #4a90e2, #63b3ed);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #5865f2;
 }
 
 .loading-content p,
 .error-content p {
   font-size: 1.2rem;
-  color: #aaa;
+  color: #b9bbbe;
   margin-bottom: 1rem;
 }
 
@@ -65,37 +62,157 @@
 
 .help-text p {
   font-size: 0.95rem;
-  color: #999;
+  color: #b9bbbe;
   margin: 0.5rem 0;
 }
 
 /* Game Interface Layout */
 .game-interface {
   display: grid;
-  grid-template-columns: 250px 1fr 350px;
-  grid-template-rows: 1fr;
+  grid-template-columns: auto 1fr 280px;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "header header header"
+    "menu map stats";
   height: 100vh;
+}
+
+/* Top Header */
+.top-header {
+  grid-area: header;
+  background: #202225;
+  border-bottom: 1px solid #202225;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  gap: 1rem;
+  position: relative;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s;
+  position: absolute;
+  left: 1rem;
+}
+
+.hamburger-btn:hover {
+  background: #4f545c;
+}
+
+/* Wiki Button (lower right corner, left of Chat button) */
+.wiki-btn {
+  position: fixed;
+  bottom: 1rem;
+  right: 8rem;
+  background: #5865f2;
+  color: white;
+  border: 2px solid #4752c4;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wiki-btn:hover {
+  background: #4752c4;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* GM Access Button (lower right corner) */
+.gm-access-btn {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background: #ed4245;
+  color: white;
+  border: 2px solid #a12d2f;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-access-btn:hover {
+  background: #c13539;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.gm-login-btn {
+  background: #5865f2;
+}
+
+.gm-login-btn:hover {
+  background: #4752c4;
+}
+
+.game-title {
+  font-size: 2.5rem;
+  margin: 0;
+  color: #5865f2;
+}
+
+.header-spacer {
+  flex: 1;
 }
 
 /* Left Menu */
 .left-menu {
-  background: #16213e;
-  border-right: 2px solid rgba(255,255,255,0.1);
+  grid-area: menu;
+  background: #2f3136;
+  border-right: 1px solid #202225;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+  width: 200px;
+}
+
+.left-menu.closed {
+  transform: translateX(-100%);
+  width: 0;
 }
 
 .menu-header {
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid #202225;
   text-align: center;
 }
 
-.menu-header h2 {
-  font-size: 1.8rem;
-  margin: 0 0 0.5rem 0;
-  color: #4a90e2;
+.menu-header .turn-info {
+  font-size: 1.1rem;
+  color: #aaa;
+  margin: 0;
 }
 
 .turn-info {
@@ -117,11 +234,24 @@
   padding: 1rem 1.5rem;
   background: transparent;
   border: none;
+  border-bottom: 1px solid #202225;
   color: white;
   cursor: pointer;
   transition: all 0.2s;
   text-align: left;
   font-size: 1.05rem;
+  justify-content: flex-start;
+}
+
+.nav-btn > span:not(.icon):not(.expand-icon) {
+  flex: 1;
+  text-align: left;
+}
+
+.expand-icon {
+  font-size: 0.7rem;
+  color: #b9bbbe;
+  transition: transform 0.2s;
 }
 
 .nav-btn:hover {
@@ -135,131 +265,66 @@
   text-align: center;
 }
 
-/* Central Map */
-.map-container {
-  background: #3a7fb8;
+.nav-btn-sub {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 0.75rem 1.5rem 0.75rem 3rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #202225;
+  color: #b9bbbe;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  text-align: left;
+  width: 100%;
+}
+
+.nav-btn-sub > span {
+  flex: 1;
+  text-align: left;
+}
+
+.nav-btn-sub:hover {
+  background: #40444b;
+  color: #dcddde;
+  padding-left: 3.5rem;
+}
+
+/* Map section removed - will be reimplemented */
+
+/* Map Area */
+.map-area {
+  grid-area: map;
+  background: #36393f;
   position: relative;
   overflow: hidden;
 }
 
-.map-loading,
-.map-error {
-  text-align: center;
-  padding: 3rem;
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-}
-
-.map-loading h2,
-.map-error h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #4a90e2;
-}
-
-.map-loading p,
-.map-error p {
-  font-size: 1.1rem;
-  color: #aaa;
-  margin: 0.5rem 0;
-}
-
-.retry-btn {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  background: #4a90e2;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.retry-btn:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-}
-
-.province-map {
-  width: 100%;
-  height: 100%;
-  user-select: none;
-  touch-action: none;
-  will-change: transform;
-}
-
-.map-controls {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.map-placeholder {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  z-index: 10;
-}
-
-.zoom-btn {
-  width: 40px;
-  height: 40px;
-  background: white;
-  border: 2px solid #333;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.zoom-btn:hover {
-  background: #f0f0f0;
-  transform: scale(1.1);
-}
-
-.zoom-btn:active {
-  transform: scale(0.95);
-}
-
-.map-placeholder {
-  text-align: center;
-  padding: 3rem;
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  height: 100%;
+  color: #b9bbbe;
 }
 
 .map-placeholder h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #4a90e2;
+  margin: 0 0 1rem 0;
+  color: #ed4245;
 }
 
 .map-placeholder p {
-  font-size: 1.1rem;
-  color: #aaa;
-  margin: 0.5rem 0;
-}
-
-.map-note {
-  margin-top: 2rem;
-  font-size: 0.95rem;
-  color: #777;
-  font-style: italic;
+  margin: 0;
+  color: #72767d;
 }
 
 /* Right Stats Panel */
 .right-panel {
-  background: #16213e;
-  border-left: 2px solid rgba(255,255,255,0.1);
+  grid-area: stats;
+  background: #2f3136;
+  border-left: 1px solid #202225;
   position: relative;
   transition: transform 0.3s ease;
   overflow-y: auto;
@@ -306,63 +371,75 @@
 .player-header h3 {
   font-size: 1.5rem;
   margin: 0 0 0.5rem 0;
-  color: #4a90e2;
+  color: #5865f2;
 }
 
 .player-location {
-  color: #aaa;
+  color: #b9bbbe;
   font-size: 0.9rem;
   margin: 0;
 }
 
 .player-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(74, 144, 226, 0.2);
 }
 
 .stat-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem;
-  background: rgba(0,0,0,0.2);
-  border-radius: 6px;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-item:last-child {
+  border-bottom: none;
 }
 
 .stat-item .label {
   color: #aaa;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-item .value {
-  color: #4a90e2;
-  font-weight: bold;
-  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  margin-left: 0.5rem;
 }
 
 .session-info {
   padding: 1.5rem;
-  background: rgba(0,0,0,0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(74, 144, 226, 0.3);
+  background: #202225;
+  border-radius: 4px;
+  border: 1px solid #5865f2;
 }
 
 .session-info h4 {
   font-size: 1.1rem;
   margin: 0 0 1rem 0;
-  color: #4a90e2;
+  color: #5865f2;
 }
 
 .session-info p {
   margin: 0.5rem 0;
   font-size: 0.95rem;
-  color: #ccc;
+  color: #b9bbbe;
 }
 
 .session-info strong {
-  color: white;
+  color: #dcddde;
 }
 
 /* Buttons */
@@ -453,53 +530,6 @@
   text-align: center;
   color: #4a90e2;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.map-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 1.2rem;
-  color: #aaa;
-}
-
-.map-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 2rem;
-  text-align: center;
-}
-
-.map-error p {
-  font-size: 1.2rem;
-  color: #e74c3c;
-  margin: 0.5rem 0;
-}
-
-.error-detail {
-  font-size: 0.9rem;
-  color: #999;
-}
-
-.retry-btn {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  background: #4a90e2;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.retry-btn:hover {
-  background: #357abd;
-  transform: translateY(-2px);
 }
 
 .map-display {
@@ -626,4 +656,83 @@
   color: #fff;
   font-weight: 600;
   font-size: 1rem;
+}
+
+.pause-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem;
+  background: #ed424520;
+  border: 2px solid #ed4245;
+  border-radius: 8px;
+  margin: 0.75rem 0;
+  text-align: center;
+}
+
+.pause-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pause-text {
+  color: #ed4245;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.pause-subtext {
+  color: #b9bbbe;
+  font-size: 0.9rem;
+}
+
+/* Wiki Modal */
+.wiki-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.wiki-modal-content {
+  position: relative;
+  width: 90%;
+  height: 85%;
+  background: #2f3136;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.wiki-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ed4245;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.wiki-close-btn:hover {
+  background: #c13539;
+  transform: scale(1.1);
 }

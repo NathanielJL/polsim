@@ -1,0 +1,246 @@
+.demographics-page {
+  background: #36393f;
+  color: #dcddde;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.demographics-page .page-top-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #2f3136;
+}
+
+.demographics-page > *:not(.page-top-header) {
+  padding: 0;
+}
+
+.province-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 1.5rem;
+  padding: 1rem;
+  background: #2f3136;
+  border-radius: 6px;
+  justify-content: center;
+}
+
+.province-btn {
+  background: #40444b;
+  color: #dcddde;
+  border: 2px solid transparent;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.province-btn:hover {
+  background: #4f545c;
+  border-color: #5865f2;
+}
+
+.province-btn.active {
+  background: #5865f2;
+  color: white;
+  border-color: #5865f2;
+}
+
+.total-population {
+  text-align: center;
+  margin: 0 1.5rem 1.5rem 1.5rem;
+  padding: 1rem;
+  background: #2f3136;
+  border-radius: 6px;
+  border-left: 4px solid #5865f2;
+}
+
+.total-population h2 {
+  color: #5865f2;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.stat-section.literacy-section {
+  background: #2f3136;
+  border-radius: 6px;
+  border: 1px solid #202225;
+  padding: 1rem;
+}
+
+.stat-section.literacy-section h3 {
+  color: #5865f2;
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #40444b;
+}
+
+.literacy-rate-display {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.literacy-value {
+  color: #3ba55d;
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.literacy-note {
+  color: #b9bbbe;
+  font-size: 0.75rem;
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1rem;
+  margin: 0 1.5rem 1.5rem 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.stat-section {
+  background: #2f3136;
+  border-radius: 6px;
+  padding: 1rem;
+  border: 1px solid #202225;
+}
+
+.stat-section h3 {
+  color: #5865f2;
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #40444b;
+}
+
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stat-table thead {
+  background: #40444b;
+}
+
+.stat-table th {
+  color: #b9bbbe;
+  font-weight: 600;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.stat-table tbody tr {
+  border-bottom: 1px solid #40444b;
+  transition: background 0.2s;
+}
+
+.stat-table tbody tr:hover {
+  background: #40444b;
+}
+
+.stat-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.stat-table td {
+  padding: 0.5rem;
+  color: #dcddde;
+  font-size: 0.85rem;
+}
+
+.category-name {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.stat-number {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+  font-size: 0.85rem;
+}
+
+.stat-percent {
+  text-align: right;
+  color: #b9bbbe;
+  font-size: 0.8rem;
+}
+
+.loading,
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+}
+
+.loading {
+  color: #b9bbbe;
+  font-size: 1.2rem;
+}
+
+.error-message h2 {
+  color: #ed4245;
+  margin-bottom: 1rem;
+}
+
+.error-message p {
+  color: #b9bbbe;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1400px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .demographics-page {
+    padding: 1rem;
+  }
+
+  .demographics-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .demographics-header h1 {
+    font-size: 2rem;
+  }
+
+  .province-selector {
+    flex-direction: column;
+  }
+
+  .province-btn {
+    width: 100%;
+  }
+
+  .total-population h2 {
+    font-size: 1.5rem;
+  }
+}

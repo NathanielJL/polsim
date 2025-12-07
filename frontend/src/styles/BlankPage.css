@@ -1,0 +1,37 @@
+.blank-page {
+  background: #36393f;
+  color: #dcddde;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.blank-page h1 {
+  color: #5865f2;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.blank-page p {
+  color: #b9bbbe;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.blank-page .back-btn {
+  background: #5865f2;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.blank-page .back-btn:hover {
+  background: #4752c4;
+}

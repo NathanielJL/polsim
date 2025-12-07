@@ -1,0 +1,261 @@
+.stock-market-page {
+  background: #36393f;
+  color: #dcddde;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.stock-market-page .page-top-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #2f3136;
+}
+
+.page-content {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.stock-market-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.etf-list h2 {
+  color: #5865f2;
+  margin-bottom: 1.5rem;
+}
+
+.etf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.etf-card {
+  background: #36393f;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 2px solid #40444b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.etf-card:hover {
+  border-color: #5865f2;
+  transform: translateY(-2px);
+}
+
+.etf-card.selected {
+  border-color: #5865f2;
+  background: #40444b;
+}
+
+.etf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.etf-sector {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #dcddde;
+}
+
+.etf-ticker {
+  background: #5865f2;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.etf-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #5865f2;
+  margin-bottom: 0.5rem;
+}
+
+.etf-change {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.etf-change.positive {
+  color: #3ba55d;
+}
+
+.etf-change.negative {
+  color: #ed4245;
+}
+
+.etf-volume {
+  font-size: 0.9rem;
+  color: #b9bbbe;
+}
+
+.trade-panel {
+  background: #36393f;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid #40444b;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+.trade-panel h2 {
+  color: #5865f2;
+  margin-bottom: 1.5rem;
+}
+
+.trade-info {
+  margin-bottom: 2rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #40444b;
+}
+
+.info-row span {
+  color: #b9bbbe;
+}
+
+.info-row .value {
+  color: #dcddde;
+  font-weight: 600;
+}
+
+.info-row .value.positive {
+  color: #3ba55d;
+}
+
+.info-row .value.negative {
+  color: #ed4245;
+}
+
+.trade-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.action-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.75rem;
+  background: #40444b;
+  color: #dcddde;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background: #4f545c;
+}
+
+.action-btn.active.buy {
+  background: #3ba55d;
+  color: white;
+  border-color: #3ba55d;
+}
+
+.action-btn.active.sell {
+  background: #ed4245;
+  color: white;
+  border-color: #ed4245;
+}
+
+.quantity-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quantity-input label {
+  color: #b9bbbe;
+  font-size: 0.9rem;
+}
+
+.quantity-input input {
+  padding: 0.75rem;
+  background: #40444b;
+  color: #dcddde;
+  border: 2px solid #40444b;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.quantity-input input:focus {
+  outline: none;
+  border-color: #5865f2;
+}
+
+.trade-summary {
+  background: #2f3136;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-row span {
+  color: #b9bbbe;
+}
+
+.total-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #5865f2 !important;
+}
+
+.execute-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.execute-btn.buy {
+  background: #3ba55d;
+  color: white;
+}
+
+.execute-btn.sell {
+  background: #ed4245;
+  color: white;
+}
+
+.execute-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}

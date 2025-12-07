@@ -13,6 +13,23 @@ import GMPortalPage from "./pages/GMPortalPage";
 import ElectionsPage from "./pages/ElectionsPage";
 import BusinessPage from "./pages/BusinessPage";
 import LegalPage from "./pages/LegalPage";
+import LegalCasesPage from "./pages/LegalCasesPage";
+import GovernmentFederalPage from "./pages/GovernmentFederalPage";
+import GovernmentProvincialPage from "./pages/GovernmentProvincialPage";
+import EconomyStatsPage from "./pages/EconomyStatsPage";
+import EconomyFederalResourcesPage from "./pages/EconomyFederalResourcesPage";
+import EconomyProvincialResourcesPage from "./pages/EconomyProvincialResourcesPage";
+import EconomyStockMarketPage from "./pages/EconomyStockMarketPage";
+import EconomyMarketsPage from "./pages/EconomyMarketsPage";
+import PopulationDemographicsPage from "./pages/PopulationDemographicsPage";
+import NewsNationalPage from "./pages/NewsNationalPage";
+import NewsProvincialPage from "./pages/NewsProvincialPage";
+import NewsCreateNewspaperPage from "./pages/NewsCreateNewspaperPage";
+import NewsManageNewspaperPage from "./pages/NewsManageNewspaperPage";
+import LegalBarExamPage from "./pages/LegalBarExamPage";
+import LegalRulingsPage from "./pages/LegalRulingsPage";
+import GMPanelPage from "./pages/GMPanelPage";
+import ChatButton from "./components/ChatButton";
 import "./App.css";
 
 // Protected route wrapper
@@ -116,6 +133,14 @@ function App() {
             }
           />
           <Route
+            path="/gm-panel"
+            element={
+              <GMRoute>
+                <GMPanelPage />
+              </GMRoute>
+            }
+          />
+          <Route
             path="/gm-dashboard"
             element={
               <GMRoute>
@@ -148,9 +173,150 @@ function App() {
             }
           />
 
+          {/* Government routes */}
+          <Route
+            path="/government/federal"
+            element={
+              <ProtectedRoute>
+                <GovernmentFederalPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/government/provincial"
+            element={
+              <ProtectedRoute>
+                <GovernmentProvincialPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Economy routes */}
+          <Route
+            path="/economy/stats"
+            element={
+              <ProtectedRoute>
+                <EconomyStatsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/economy/federal"
+            element={
+              <ProtectedRoute>
+                <EconomyFederalResourcesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/economy/provincial"
+            element={
+              <ProtectedRoute>
+                <EconomyProvincialResourcesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/economy/stock-market"
+            element={
+              <ProtectedRoute>
+                <EconomyStockMarketPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/economy/markets"
+            element={
+              <ProtectedRoute>
+                <EconomyMarketsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Population routes */}
+          <Route
+            path="/population/demographics"
+            element={
+              <ProtectedRoute>
+                <PopulationDemographicsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/population/reputation"
+            element={
+              <ProtectedRoute>
+                <ReputationPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* News routes */}
+          <Route
+            path="/news/national"
+            element={
+              <ProtectedRoute>
+                <NewsNationalPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/provincial"
+            element={
+              <ProtectedRoute>
+                <NewsProvincialPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/create-newspaper"
+            element={
+              <ProtectedRoute>
+                <NewsCreateNewspaperPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/news/manage"
+            element={
+              <ProtectedRoute>
+                <NewsManageNewspaperPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Legal routes */}
+          <Route
+            path="/legal/bar-exam"
+            element={
+              <ProtectedRoute>
+                <LegalBarExamPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/legal/cases"
+            element={
+              <ProtectedRoute>
+                <LegalCasesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/legal/rulings"
+            element={
+              <ProtectedRoute>
+                <LegalRulingsPage />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        
+        {/* Chat Button - Available on all protected routes */}
+        {isAuthenticated && <ChatButton />}
       </div>
     </Router>
   );

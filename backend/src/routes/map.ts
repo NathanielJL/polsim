@@ -90,39 +90,49 @@ router.get('/:sessionId/cells', async (req: Request, res: Response) => {
     let cellsWithPolygons = cells;
     if (cells.length > 0 && !cells[0].polygon) {
       try {
-        const geojsonPath = path.join(__dirname, '../../../Aotearoa Cells 2025-12-05-20-40.geojson');
-        const geojsonData = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'));
+        const geojsonPath = path.join(process.cwd(), 'Aotearoa Cells 2025-12-06-14-14.geojson');
+        console.log(`Attempting to load GeoJSON from: ${geojsonPath}`);
         
-        console.log(`Loading polygons from GeoJSON (${geojsonData.features.length} features)...`);
-        
-        // Create a map of cell ID to polygon coordinates and state/province data
-        const cellDataMap = new Map();
-        geojsonData.features.forEach((feature: any) => {
-          const cellId = feature.properties?.i || feature.properties?.id;
-          if (cellId !== undefined && feature.geometry?.coordinates) {
-            cellDataMap.set(cellId, {
-              polygon: feature.geometry.coordinates[0],
-              state: feature.properties?.state,
-              province: feature.properties?.province
-            });
-          }
-        });
-        
-        cellsWithPolygons = cells.map(cell => {
-          const cellData = cellDataMap.get(cell.azgaarId);
-          if (cellData) {
-            return { 
-              ...cell, 
-              polygon: cellData.polygon,
-              state: cellData.state,
-              province: cellData.province
-            };
-          }
-          return cell;
-        });
-        
-        const withPolygons = cellsWithPolygons.filter(c => c.polygon).length;
-        console.log(`Polygons loaded! ${withPolygons}/${cells.length} cells have polygon data`);
+        if (!fs.existsSync(geojsonPath)) {
+          console.error(`GeoJSON file not found at: ${geojsonPath}`);
+        } else {
+          const geojsonData = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'));
+          
+          console.log(`Loading polygons from GeoJSON (${geojsonData.features?.length || 0} features)...`);
+          
+          // Create a map of cell ID to polygon coordinates and state/province data
+          const cellDataMap = new Map();
+          geojsonData.features?.forEach((feature: any) => {
+            const cellId = feature.properties?.i || feature.properties?.id;
+            if (cellId !== undefined && feature.geometry?.coordinates) {
+              cellDataMap.set(cellId, {
+                polygon: feature.geometry.coordinates[0],
+                state: feature.properties?.state,
+                province: feature.properties?.province
+              });
+            }
+          });
+          
+          console.log(`GeoJSON features in map: ${cellDataMap.size}`);
+          console.log(`Sample GeoJSON IDs:`, Array.from(cellDataMap.keys()).slice(0, 10));
+          console.log(`Sample DB cell azgaarIds:`, cells.slice(0, 10).map(c => c.azgaarId));
+          
+          cellsWithPolygons = cells.map(cell => {
+            const cellData = cellDataMap.get(cell.azgaarId);
+            if (cellData) {
+              return { 
+                ...cell, 
+                polygon: cellData.polygon,
+                state: cellData.state,
+                province: cellData.province
+              };
+            }
+            return cell;
+          });
+          
+          const withPolygons = cellsWithPolygons.filter(c => c.polygon).length;
+          console.log(`Polygons loaded! ${withPolygons}/${cells.length} cells have polygon data`);
+        }
       } catch (err) {
         console.error('Failed to load polygons from GeoJSON:', err);
         // Return cells without polygons
@@ -155,7 +165,14 @@ router.get('/:sessionId/cells', async (req: Request, res: Response) => {
  */
 router.get('/:sessionId/rivers', async (req: Request, res: Response) => {
   try {
-    const geojsonPath = path.join(__dirname, '../../../Aotearoa Rivers 2025-12-05-20-40.geojson');
+    const geojsonPath = path.join(process.cwd(), 'Aotearoa Rivers 2025-12-06-14-14.geojson');
+    console.log(`Loading rivers from: ${geojsonPath}`);
+    
+    if (!fs.existsSync(geojsonPath)) {
+      console.error(`Rivers GeoJSON not found at: ${geojsonPath}`);
+      return res.json({ type: 'FeatureCollection', features: [] });
+    }
+    
     const geojsonData = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'));
     
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
@@ -175,7 +192,14 @@ router.get('/:sessionId/rivers', async (req: Request, res: Response) => {
  */
 router.get('/:sessionId/routes', async (req: Request, res: Response) => {
   try {
-    const geojsonPath = path.join(__dirname, '../../../Aotearoa Routes 2025-12-05-20-40.geojson');
+    const geojsonPath = path.join(process.cwd(), 'Aotearoa Routes 2025-12-06-14-14.geojson');
+    console.log(`Loading routes from: ${geojsonPath}`);
+    
+    if (!fs.existsSync(geojsonPath)) {
+      console.error(`Routes GeoJSON not found at: ${geojsonPath}`);
+      return res.json({ type: 'FeatureCollection', features: [] });
+    }
+    
     const geojsonData = JSON.parse(fs.readFileSync(geojsonPath, 'utf8'));
     
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
@@ -200,8 +224,12 @@ router.post('/:sessionId/populate-polygons', async (req: Request, res: Response)
     console.log('Populating polygons for session:', sessionId);
     
     // Load Azgaar map data - file is in project root
-    const mapDataPath = path.join(__dirname, '../../../Aotearoa Full 2025-12-03-19-27.json');
+    const mapDataPath = path.join(process.cwd(), 'Aotearoa Full 2025-12-06-14-15.json');
     console.log('Loading map data from:', mapDataPath);
+    
+    if (!fs.existsSync(mapDataPath)) {
+      return res.status(404).json({ error: 'Map data file not found', path: mapDataPath });
+    }
     
     const mapData = JSON.parse(fs.readFileSync(mapDataPath, 'utf8'));
     const packVertices = mapData.pack.vertices;
@@ -353,8 +381,13 @@ router.get('/:sessionId/cells', async (req: Request, res: Response) => {
 router.get('/:sessionId/cities', async (req: Request, res: Response) => {
   try {
     // Load cities directly from the updated Azgaar JSON file
-    const mapDataPath = path.join(__dirname, '../../../Aotearoa Full 2025-12-05-21-59.json');
+    const mapDataPath = path.join(process.cwd(), 'Aotearoa Full 2025-12-06-14-15.json');
     console.log('Loading cities from:', mapDataPath);
+    
+    if (!fs.existsSync(mapDataPath)) {
+      console.error(`Map data file not found at: ${mapDataPath}`);
+      return res.json({ cities: [] });
+    }
     
     const mapData = JSON.parse(fs.readFileSync(mapDataPath, 'utf8'));
     const burgs = mapData.pack?.burgs || [];

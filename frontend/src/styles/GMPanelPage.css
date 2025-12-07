@@ -1,0 +1,344 @@
+.gm-panel-page {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "header header"
+    "menu content";
+  height: 100vh;
+  background: #36393f;
+  color: #dcddde;
+}
+
+/* Top Header */
+.gm-panel-page .top-header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #202225;
+  padding: 0 2rem;
+  border-bottom: 2px solid #ed4245;
+  position: relative;
+}
+
+.gm-panel-page .hamburger-btn {
+  position: absolute;
+  left: 1rem;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.gm-panel-page .hamburger-btn:hover {
+  background: #4f545c;
+}
+
+.gm-panel-page .page-title {
+  color: #ed4245;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.gm-panel-page .back-btn {
+  position: absolute;
+  right: 1rem;
+  background: #5865f2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.gm-panel-page .back-btn:hover {
+  background: #4752c4;
+}
+
+/* Left Menu */
+.gm-left-menu {
+  grid-area: menu;
+  background: #2f3136;
+  width: 250px;
+  border-right: 1px solid #202225;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+
+.gm-left-menu.closed {
+  transform: translateX(-100%);
+  width: 0;
+}
+
+.gm-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.gm-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #202225;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.gm-nav-btn .icon {
+  font-size: 1.3rem;
+  width: 30px;
+  text-align: center;
+}
+
+.gm-nav-btn:hover {
+  background: rgba(237, 66, 69, 0.2);
+  border-left: 3px solid #ed4245;
+}
+
+.gm-nav-btn.active {
+  background: rgba(237, 66, 69, 0.3);
+  border-left: 3px solid #ed4245;
+  color: #ed4245;
+  font-weight: bold;
+}
+
+/* Main Content */
+.gm-main-content {
+  grid-area: content;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.tool-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tool-content h2 {
+  color: #ed4245;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Overview Grid */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.overview-card {
+  background: #2f3136;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid #202225;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  border-color: #ed4245;
+}
+
+.overview-card h3 {
+  color: #b9bbbe;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+}
+
+.overview-card .stat-number {
+  color: #ed4245;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.overview-card .stat-label {
+  color: #72767d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Player Tools */
+.player-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.gm-tool-btn {
+  background: #2f3136;
+  color: #dcddde;
+  border: 2px solid #202225;
+  padding: 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.gm-tool-btn:hover {
+  background: #40444b;
+  border-color: #ed4245;
+  transform: translateX(4px);
+}
+
+.gm-tool-btn.paused {
+  background: #3ba55d;
+  color: white;
+  border-color: #3ba55d;
+}
+
+.gm-tool-btn.paused:hover {
+  opacity: 0.8;
+  background: #3ba55d;
+  border-color: #3ba55d;
+}
+
+.gm-tool-btn.active {
+  background: #ed4245;
+  color: white;
+  border-color: #ed4245;
+}
+
+.gm-tool-btn.active:hover {
+  opacity: 0.8;
+  background: #ed4245;
+  border-color: #ed4245;
+}
+
+/* AI Chat */
+.ai-chat-container {
+  max-width: 800px;
+}
+
+.ai-chat-box {
+  background: #2f3136;
+  border-radius: 8px;
+  border: 2px solid #202225;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.empty-chat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #72767d;
+  font-size: 1.1rem;
+}
+
+.chat-message {
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
+.chat-message.user {
+  background: #5865f2;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.chat-message.assistant {
+  background: #40444b;
+  color: #dcddde;
+  align-self: flex-start;
+}
+
+.message-content {
+  margin: 0;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid #202225;
+}
+
+.chat-input {
+  flex: 1;
+  background: #40444b;
+  border: 1px solid #202225;
+  color: #dcddde;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: #ed4245;
+}
+
+.chat-submit {
+  background: #ed4245;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.chat-submit:hover {
+  background: #c13539;
+}
+
+/* Scrollbar Styling */
+.chat-messages::-webkit-scrollbar,
+.gm-main-content::-webkit-scrollbar,
+.gm-left-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track,
+.gm-main-content::-webkit-scrollbar-track,
+.gm-left-menu::-webkit-scrollbar-track {
+  background: #2f3136;
+}
+
+.chat-messages::-webkit-scrollbar-thumb,
+.gm-main-content::-webkit-scrollbar-thumb,
+.gm-left-menu::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover,
+.gm-main-content::-webkit-scrollbar-thumb:hover,
+.gm-left-menu::-webkit-scrollbar-thumb:hover {
+  background: #40444b;
+}

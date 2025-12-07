@@ -123,13 +123,21 @@ export const MarketModel = mongoose.model<Market & Document>("Market", MarketSch
 // ===== COMPANY SCHEMA =====
 const CompanySchema = new Schema({
   id: { type: String, unique: true, required: true },
+  sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
   ownerId: { type: String, required: true },
   name: { type: String, required: true },
-  type: String,
+  type: { 
+    type: String, 
+    enum: ['farm', 'mine', 'factory', 'shop', 'tavern', 'shipping', 'bank'],
+    required: true 
+  },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
   cash: { type: Number, default: 0 },
-  employees: { type: Number, default: 0 },
+  employees: { type: Number, default: 1 },
   marketInfluence: { type: Map, of: Number, default: new Map() },
   monthlyProfit: { type: Number, default: 0 },
+  revenue: { type: Number, default: 0 },
+  expenses: { type: Number, default: 0 },
   valuation: { type: Number, default: 0 },
   totalShares: { type: Number, default: 10000 },
   shareholders: [{
@@ -143,9 +151,11 @@ const CompanySchema = new Schema({
     _id: false
   }],
   createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 CompanySchema.index({ ownerId: 1 });
+CompanySchema.index({ sessionId: 1 });
 export const CompanyModel = mongoose.model<Company & Document>("Company", CompanySchema);
 
 // ===== POLICY SCHEMA =====
@@ -340,10 +350,19 @@ const NewsOutletSchema = new Schema({
   ownerId: { type: Schema.Types.ObjectId, ref: 'Player' },
   employees: [{ type: Schema.Types.ObjectId, ref: 'Player' }],
   bias: { type: Number, min: -100, max: 100, default: 0 },
+  
+  // Newspaper stats
+  readership: { type: Number, default: 100 },
+  cash: { type: Number, default: 0 },
+  reputation: { type: Number, default: 50 },
+  staff: { type: Number, default: 1 },
+  
   createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 NewsOutletSchema.index({ sessionId: 1, type: 1 });
+NewsOutletSchema.index({ provinceId: 1 });
 export const NewsOutletModel = mongoose.model<NewsOutlet & Document>(
   "NewsOutlet",
   NewsOutletSchema
@@ -847,52 +866,45 @@ PlayerPortfolioSchema.index({ playerId: 1, sessionId: 1 });
 export const PlayerPortfolioModel = mongoose.model('PlayerPortfolio', PlayerPortfolioSchema);
 
 // ===== COURT CASE SCHEMA =====
-// TEMPORARILY DISABLED - TypeScript compilation errors, will fix in separate commit
-/*
-const CourtCaseSchema: any = new Schema({
+// ===== COURT CASE SCHEMA =====
+const CourtCaseSchema = new Schema({
+  id: { type: String, unique: true, required: true },
   sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
-  assignedLawyerId: { type: Schema.Types.ObjectId, ref: 'Player' },
-  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
-  caseType: { type: String, enum: ['civil', 'criminal'], required: true },
   title: { type: String, required: true },
-  plaintiff: String,
-  defendant: String,
-  summary: String,
-  legalIssues: [String],
-  culturalContext: String, // 'Māori', 'British', 'Mixed'
-  difficulty: { type: Number, min: 1, max: 10 },
-  potentialOutcomes: [{
-    outcome: String,
-    probability: Number,
-    reputationImpact: Number,
-    _id: false
-  }],
-  rewardRange: {
-    min: { type: Number, default: 50 },
-    max: { type: Number, default: 500 },
-    _id: false
-  },
+  plaintiff: { type: String, required: true },
+  defendant: { type: String, required: true },
+  provinceId: { type: Schema.Types.ObjectId, ref: 'Province' },
+  description: { type: String, required: true },
+  
+  // Lawyer representation
+  plaintiffLawyer: { type: Schema.Types.ObjectId, ref: 'Player' },
+  defendantLawyer: { type: Schema.Types.ObjectId, ref: 'Player' },
+  
+  // Case metadata
+  aiGenerated: { type: Boolean, default: false },
+  submittedBy: { type: Schema.Types.ObjectId, ref: 'Player' },
+  
   status: { 
     type: String, 
     enum: ['pending', 'in-progress', 'resolved', 'dismissed'],
     default: 'pending'
   },
-  lawyerStrategy: String, // Player's chosen strategy
-  lawyerArguments: String, // Player's legal arguments
-  outcome: String, // Final outcome
-  reward: Number, // Payment received
-  reputationChange: Number, // Rep gain/loss
-  turnCreated: Number,
-  turnDue: Number,
-  resolvedAt: Date,
-  createdAt: { type: Date, default: Date.now }
+  
+  // Chatroom for lawyer collaboration
+  chatroomId: { type: String },
+  
+  // Resolution
+  outcome: { type: String },
+  rulingDate: { type: Date },
+  
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
-CourtCaseSchema.index({ sessionId: 1, assignedLawyerId: 1 });
-CourtCaseSchema.index({ status: 1, turnDue: 1 });
+CourtCaseSchema.index({ sessionId: 1, status: 1 });
+CourtCaseSchema.index({ plaintiffLawyer: 1 });
+CourtCaseSchema.index({ defendantLawyer: 1 });
 export const CourtCaseModel = mongoose.model('CourtCase', CourtCaseSchema);
-*/
-const CourtCaseModel = null as any; // Placeholder until schema is fixed
 
 // ===== SESSION SCHEMA =====
 const SessionSchema = new Schema({

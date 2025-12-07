@@ -14,9 +14,9 @@
 - **Decay Rate**: 2% per turn toward neutral (50%)
 
 ### Test Campaigns
-1. **Upper Class Landowner (Auckland)**: 1 turn duration, 3% boost
-2. **Middle Class Merchant (Wellington)**: 2 turn duration, 4% boost  
-3. **Lower Class Worker (Canterbury)**: 3 turn duration, 2% boost
+1. **Upper Class Landowner (Vulteralia)**: 1 turn duration, 3% boost
+2. **Middle Class Merchant (New Zealand)**: 2 turn duration, 4% boost  
+3. **Lower Class Worker (Cooksland)**: 3 turn duration, 2% boost
 
 ## Simulation Results
 
@@ -31,11 +31,11 @@ All 3 campaigns completed successfully at their scheduled turns:
 
 | Demographic | Initial | Final | Change | Campaign Impact |
 |-------------|---------|-------|--------|----------------|
-| Middle Class Merchant (Wellington) | 50.0% | 53.2% | +3.2% | ✅ +4% boost (Turn 2) |
-| Upper Class Landowner (Auckland) | 50.0% | 52.4% | +2.4% | ✅ +3% boost (Turn 1) |
-| Lower Class Worker (Canterbury) | 50.0% | 51.6% | +1.6% | ✅ +2% boost (Turn 3) |
-| Māori Chief (Northland) | 50.0% | 50.0% | 0.0% | No campaign |
-| Lower Class Farmer (Otago) | 50.0% | 50.0% | 0.0% | No campaign |
+| Middle Class Merchant (New Zealand) | 50.0% | 53.2% | +3.2% | ✅ +4% boost (Turn 2) |
+| Upper Class Landowner (Vulteralia) | 50.0% | 52.4% | +2.4% | ✅ +3% boost (Turn 1) |
+| Lower Class Worker (Cooksland) | 50.0% | 51.6% | +1.6% | ✅ +2% boost (Turn 3) |
+| Māori Chief (Southland) | 50.0% | 50.0% | 0.0% | No campaign |
+| Lower Class Farmer (Te Moana-a-Toir) | 50.0% | 50.0% | 0.0% | No campaign |
 
 ### Turn-by-Turn Summary
 

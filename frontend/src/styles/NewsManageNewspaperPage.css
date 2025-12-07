@@ -1,0 +1,195 @@
+.news-manage-page {
+  background: #36393f;
+  min-height: 100vh;
+  color: #dcddde;
+}
+
+.manage-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading,
+.no-newspaper {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #2f3136;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.no-newspaper h2 {
+  color: #5865f2;
+  margin-bottom: 1rem;
+}
+
+.no-newspaper p {
+  color: #b9bbbe;
+  margin-bottom: 2rem;
+}
+
+.newspaper-header {
+  background: #2f3136;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #5865f2;
+}
+
+.newspaper-header h1 {
+  color: #5865f2;
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+}
+
+.slogan {
+  color: #b9bbbe;
+  font-style: italic;
+  margin: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #2f3136;
+  padding: 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-label {
+  color: #b9bbbe;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  color: #5865f2;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.info-grid {
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: #2f3136;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.info-card h3 {
+  color: #5865f2;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #40444b;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #b9bbbe;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #dcddde;
+  text-transform: capitalize;
+}
+
+.actions-section {
+  background: #2f3136;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.actions-section h3 {
+  color: #5865f2;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.action-btn {
+  background: #40444b;
+  color: #dcddde;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.action-btn:hover {
+  background: #4e5058;
+  transform: translateY(-2px);
+}
+
+.action-btn.primary {
+  background: #5865f2;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #4752c4;
+}
+
+.btn-icon {
+  font-size: 1.5rem;
+}
+
+.create-btn {
+  background: #5865f2;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-btn:hover {
+  background: #4752c4;
+}

@@ -1,0 +1,136 @@
+.market-page {
+  background: #36393f;
+  color: #dcddde;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.market-page .page-top-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #2f3136;
+}
+
+.page-content {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.market-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: #36393f;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid #40444b;
+  text-align: center;
+}
+
+.summary-label {
+  color: #b9bbbe;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #5865f2;
+}
+
+.summary-value.green {
+  color: #3ba55d;
+}
+
+.summary-value.red {
+  color: #ed4245;
+}
+
+.industry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.industry-card {
+  background: #36393f;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid #40444b;
+  transition: all 0.2s;
+}
+
+.industry-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.industry-card.strong-growth {
+  border-color: #3ba55d;
+}
+
+.industry-card.moderate-growth {
+  border-color: #57a85d;
+}
+
+.industry-card.moderate-decline {
+  border-color: #e67e7e;
+}
+
+.industry-card.strong-decline {
+  border-color: #ed4245;
+}
+
+.industry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.industry-icon {
+  font-size: 2.5rem;
+}
+
+.trend-icon {
+  font-size: 1.5rem;
+}
+
+.industry-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #dcddde;
+  margin-bottom: 0.75rem;
+}
+
+.industry-growth {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.industry-growth .positive {
+  color: #3ba55d;
+}
+
+.industry-growth .negative {
+  color: #ed4245;
+}
+
+.industry-status {
+  color: #b9bbbe;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

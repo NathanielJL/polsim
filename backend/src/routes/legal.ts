@@ -159,6 +159,137 @@ router.get('/bar-exam-questions', authMiddleware, async (req: Request, res: Resp
 });
 
 /**
+ * POST /api/legal/submit-case
+ * Submit a new legal case
+ */
+router.post('/submit-case', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { playerId, sessionId, title, defendant, provinceId, description } = req.body;
+    
+    if (!title || !defendant || !description) {
+      return res.status(400).json({ error: 'Title, defendant, and description required' });
+    }
+    
+    const player = await models.Player.findById(playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    // Create case
+    const courtCase = await models.CourtCase.create({
+      id: `case-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      sessionId,
+      title,
+      plaintiff: player.username,
+      defendant,
+      provinceId,
+      description,
+      aiGenerated: false,
+      submittedBy: playerId,
+      status: 'pending',
+      createdAt: new Date()
+    });
+    
+    res.json({ 
+      success: true,
+      message: 'Case submitted successfully',
+      case: courtCase
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/legal/cases/:sessionId
+ * Get all cases for a session
+ */
+router.get('/cases/:sessionId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params;
+    const { status } = req.query;
+    
+    const filter: any = { sessionId };
+    if (status) {
+      filter.status = status;
+    }
+    
+    const cases = await models.CourtCase.find(filter)
+      .populate('plaintiffLawyer', 'username')
+      .populate('defendantLawyer', 'username')
+      .populate('provinceId', 'name')
+      .sort({ createdAt: -1 })
+      .lean();
+    
+    res.json({ cases });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/legal/take-case
+ * Lawyer takes a case (representing plaintiff or defendant)
+ */
+router.post('/take-case', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { playerId, caseId, side } = req.body; // side: 'plaintiff' or 'defendant'
+    
+    const player = await models.Player.findById(playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    // Check if player is a lawyer
+    if (!player.heldOffice || player.heldOffice.type !== 'lawyer') {
+      return res.status(403).json({ error: 'Must be a lawyer to take cases' });
+    }
+    
+    const courtCase = await models.CourtCase.findOne({ id: caseId });
+    if (!courtCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+    
+    if (courtCase.status !== 'pending') {
+      return res.status(400).json({ error: 'Case is not available' });
+    }
+    
+    // Assign lawyer to the appropriate side
+    if (side === 'plaintiff') {
+      if (courtCase.plaintiffLawyer) {
+        return res.status(400).json({ error: 'Plaintiff already has a lawyer' });
+      }
+      courtCase.plaintiffLawyer = playerId;
+    } else if (side === 'defendant') {
+      if (courtCase.defendantLawyer) {
+        return res.status(400).json({ error: 'Defendant already has a lawyer' });
+      }
+      courtCase.defendantLawyer = playerId;
+    } else {
+      return res.status(400).json({ error: 'Invalid side. Must be "plaintiff" or "defendant"' });
+    }
+    
+    // If both sides have lawyers, create chatroom and set status to in-progress
+    if (courtCase.plaintiffLawyer && courtCase.defendantLawyer) {
+      courtCase.status = 'in-progress';
+      courtCase.chatroomId = `case-chat-${courtCase.id}`;
+    }
+    
+    courtCase.updatedAt = new Date();
+    await courtCase.save();
+    
+    res.json({ 
+      success: true,
+      message: `You are now representing the ${side}`,
+      case: courtCase,
+      chatroomCreated: !!courtCase.chatroomId
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * POST /api/legal/service/contract
  * Draft a contract for a client
  */

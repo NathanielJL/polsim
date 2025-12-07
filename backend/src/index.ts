@@ -33,6 +33,7 @@ import archiveRoutes from "./routes/archive";
 import dataDictionaryRoutes from "./routes/data-dictionary";
 import campaignRoutes from "./routes/campaigns";
 import endorsementRoutes from "./routes/endorsements";
+import demographicsRoutes from "./routes/demographics";
 import { TurnScheduler } from "./services/TurnScheduler";
 
 dotenv.config();
@@ -178,6 +179,9 @@ app.use("/api/campaigns", campaignRoutes);
 
 // Endorsement system routes (player-to-player transfers)
 app.use("/api/endorsements", endorsementRoutes);
+
+// Demographics statistics routes
+app.use("/api/demographics", demographicsRoutes);
 
 // Create or join game session
 app.post("/api/sessions", (req: Request, res: Response) => {

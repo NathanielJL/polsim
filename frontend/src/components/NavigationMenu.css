@@ -1,0 +1,103 @@
+.nav-menu {
+  position: fixed;
+  left: 0;
+  top: 60px;
+  bottom: 0;
+  width: 200px;
+  background: #2f3136;
+  border-right: 1px solid #202225;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.nav-menu.closed {
+  transform: translateX(-100%);
+}
+
+.nav-menu.open {
+  transform: translateX(0);
+}
+
+.game-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.nav-btn {
+  background: transparent;
+  color: #dcddde;
+  border: none;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  font-size: 0.95rem;
+  justify-content: flex-start;
+}
+
+.nav-btn:hover {
+  background: #40444b;
+}
+
+.nav-btn .icon {
+  font-size: 1.2rem;
+  min-width: 1.5rem;
+}
+
+.nav-btn > span:nth-child(2) {
+  flex: 1;
+  text-align: left;
+}
+
+.expand-icon {
+  font-size: 0.7rem;
+  color: #72767d;
+  margin-left: auto;
+}
+
+.nav-btn-sub {
+  background: transparent;
+  color: #b9bbbe;
+  border: none;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav-btn-sub > span {
+  flex: 1;
+  text-align: left;
+}
+
+.nav-btn-sub:hover {
+  background: #40444b;
+}
+
+/* Scrollbar styling */
+.nav-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nav-menu::-webkit-scrollbar-track {
+  background: #2f3136;
+}
+
+.nav-menu::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 4px;
+}
+
+.nav-menu::-webkit-scrollbar-thumb:hover {
+  background: #40444b;
+}

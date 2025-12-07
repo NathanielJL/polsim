@@ -194,17 +194,34 @@ router.post('/outlet/create', authMiddleware, async (req: Request, res: Response
       return res.status(404).json({ error: 'Player not found' });
     }
     
+    // Check if player already owns a newspaper
+    const existingOwned = await models.NewsOutlet.findOne({ ownerId: playerId });
+    if (existingOwned) {
+      return res.status(400).json({ error: 'You already own a newspaper' });
+    }
+    
+    // Check province limit (max 5 newspapers per province)
+    const provinceCount = await models.NewsOutlet.countDocuments({ 
+      provinceId,
+      type: 'provincial'
+    });
+    
+    if (provinceCount >= 5) {
+      return res.status(400).json({ 
+        error: 'This province already has the maximum of 5 newspapers' 
+      });
+    }
+    
     // Cost to create newspaper
-    const cost = 5000; // £5,000 to found a newspaper
+    const cost = 700; // £700 to found a newspaper
     if (player.cash < cost) {
       return res.status(400).json({ error: 'Insufficient funds to create newspaper' });
     }
     
     player.cash -= cost;
-    await player.save();
     
     const outlet = await models.NewsOutlet.create({
-      id: `outlet-${Date.now()}`,
+      id: `outlet-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       sessionId,
       name,
       type: 'provincial',
@@ -212,14 +229,44 @@ router.post('/outlet/create', authMiddleware, async (req: Request, res: Response
       politicalStance,
       ownerId: playerId,
       employees: [],
+      readership: 100,
+      cash: 0,
+      reputation: 50,
+      staff: 1,
       createdAt: new Date(),
     });
+    
+    // Link to player
+    player.newsOutletOwned = outlet.id;
+    await player.save();
     
     res.json({ 
       success: true,
       outlet,
       newBalance: player.cash 
     });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/news/my-newspaper/:playerId
+ * Get player's owned newspaper
+ */
+router.get('/my-newspaper/:playerId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { playerId } = req.params;
+    
+    const newspaper = await models.NewsOutlet.findOne({ ownerId: playerId })
+      .populate('provinceId', 'name')
+      .lean();
+    
+    if (!newspaper) {
+      return res.json({ newspaper: null });
+    }
+    
+    res.json({ newspaper });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

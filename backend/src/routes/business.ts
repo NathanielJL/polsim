@@ -15,7 +15,7 @@ const router = Router();
  */
 router.post('/found', authMiddleware, async (req: Request, res: Response) => {
   try {
-    const { playerId, sessionId, name, type, initialCapital } = req.body;
+    const { playerId, sessionId, name, type, provinceId } = req.body;
     
     const player = await models.Player.findById(playerId);
     if (!player) {
@@ -23,28 +23,31 @@ router.post('/found', authMiddleware, async (req: Request, res: Response) => {
     }
     
     if (player.companyOwned) {
-      return res.status(400).json({ error: 'Already own a company' });
+      return res.status(400).json({ error: 'You already own a business' });
     }
     
-    const cost = initialCapital || 500;
+    // Business costs by type
+    const businessCosts: Record<string, number> = {
+      'farm': 350,
+      'mine': 500,
+      'factory': 1100,
+      'shop': 150,
+      'tavern': 200,
+      'shipping': 1500,
+      'bank': 2000
+    };
+    
+    const cost = businessCosts[type];
+    if (!cost) {
+      return res.status(400).json({ error: 'Invalid business type' });
+    }
     
     if (player.cash < cost) {
       return res.status(400).json({ error: 'Insufficient funds' });
     }
     
-    // Valid company types
-    const validTypes = [
-      'Hotel', 'Construction', 'Medicine', 'Finance', 'Technology',
-      'Agriculture', 'Manufacturing', 'Transport', 'Mining', 'Retail'
-    ];
-    
-    if (!validTypes.includes(type)) {
-      return res.status(400).json({ error: 'Invalid company type' });
-    }
-    
     // Deduct cost
     player.cash -= cost;
-    await player.save();
     
     // Create company
     const company = await models.Company.create({
@@ -53,17 +56,21 @@ router.post('/found', authMiddleware, async (req: Request, res: Response) => {
       ownerId: playerId,
       name,
       type,
-      cash: cost,
-      employees: 1, // Just the owner
+      provinceId: provinceId || player.currentProvinceId,
+      cash: 0,
+      employees: 1,
       marketInfluence: new Map(),
       monthlyProfit: 0,
-      valuation: cost, // Initial valuation = starting capital
+      revenue: 0,
+      expenses: 0,
+      valuation: cost,
       totalShares: 10000,
       shareholders: [{
         playerId: playerId,
-        shares: 10000 // Founder gets 100% ownership
+        shares: 10000
       }],
       profitHistory: [],
+      createdAt: new Date()
     });
     
     // Link to player
@@ -76,6 +83,28 @@ router.post('/found', authMiddleware, async (req: Request, res: Response) => {
       company,
       newBalance: player.cash 
     });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/business/my-business/:playerId
+ * Get player's owned business
+ */
+router.get('/my-business/:playerId', authMiddleware, async (req: Request, res: Response) => {
+  try {
+    const { playerId } = req.params;
+    
+    const business = await models.Company.findOne({ ownerId: playerId })
+      .populate('provinceId', 'name')
+      .lean();
+    
+    if (!business) {
+      return res.json({ business: null });
+    }
+    
+    res.json({ business });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
